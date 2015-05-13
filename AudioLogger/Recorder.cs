@@ -13,8 +13,6 @@ using System.IO;
 using Ini;
 using Ftp;
 
-//just to change file for GIT commit.
-
 namespace AudioLogger
 {
     public class Recorder
