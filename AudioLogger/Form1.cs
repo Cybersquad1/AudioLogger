@@ -52,8 +52,27 @@ namespace AudioLogger
 
             tb_hostname.Text = config.IniReadValue("ftp", "host");
             tb_directory.Text = config.IniReadValue("ftp", "targetDir");
-            tb_username.Text = config.IniReadValue("ftp","user");
-            tb_password.Text = config.IniReadValue("ftp","pass");
+            tb_username.Text = config.IniReadValue("ftp", "user");
+            tb_password.Text = config.IniReadValue("ftp", "pass");
+
+            if(config.IniReadValue("file", "keepWav")=="True") {
+                cb_keepWav.Checked = true;
+            } else {
+                cb_keepWav.Checked = false;
+            }
+
+            if (config.IniReadValue("file", "keepMp3") == "True") {
+                cb_keepMp3.Checked = true;
+            } else {
+                cb_keepMp3.Checked = false;
+            }
+
+            if (config.IniReadValue("upload", "type") == "ftp") {
+                cb_uploadFtp.Checked = true;
+            } else {
+                cb_uploadFtp.Checked = false;
+            }
+
         }
 
         public void set_device(object sender, System.EventArgs e)
@@ -153,13 +172,33 @@ namespace AudioLogger
 
         private void bt_Save_Click(object sender, EventArgs e)
         {
+            if(cb_uploadFtp.Checked) {
+                config.IniWriteValue("upload", "type", "ftp");
+            }
+            else
+            {
+                config.IniWriteValue("upload", "type", "dir");
+            }
+            if (r_wav.Checked)
+            {
+                config.IniWriteValue("upload", "format", "wav");
+            }
+            else
+            {
+                config.IniWriteValue("upload", "format", "mp3");
+            }
+
             config.IniWriteValue("ftp", "host", tb_hostname.Text);
             config.IniWriteValue("ftp", "targetDir", tb_directory.Text);
             config.IniWriteValue("ftp", "user", tb_username.Text);
-            config.IniWriteValue("ftp", "pass", tb_password.Text);          
+            config.IniWriteValue("ftp", "pass", tb_password.Text);
+
             config.IniWriteValue("file", "pathWav", cb_path_wav.Text);
             config.IniWriteValue("file", "pathMp3", cb_path_mp3.Text);
             config.IniWriteValue("file", "span", cb_lenght.Text);
+            config.IniWriteValue("file", "keepWav", cb_keepWav.Checked.ToString());
+            config.IniWriteValue("file", "keepMp3", cb_keepMp3.Checked.ToString());
+
 
         }
 
