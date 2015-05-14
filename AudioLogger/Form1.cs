@@ -27,6 +27,7 @@ namespace AudioLogger
         string filepathMp3;
         int progressTotal;
         int progress;
+        string filetype;
 
         IniFile config = new IniFile(System.IO.Directory.GetCurrentDirectory() + "/config.ini");
 
@@ -48,7 +49,6 @@ namespace AudioLogger
             cb_path_wav.SelectedItem = cb_path_wav.SelectedIndex = 0;
             cb_path_mp3.SelectedItem = cb_path_mp3.SelectedIndex = 0;
 
-            
             tb_hostname.Text = config.IniReadValue("ftp", "host");
             tb_directory.Text = config.IniReadValue("ftp", "targetDir");
             tb_username.Text = config.IniReadValue("ftp","user");
@@ -61,7 +61,7 @@ namespace AudioLogger
             deviceId = Convert.ToInt32(selectedDevice.Value);
         }
 
-       
+    
         public void btn_start_Click(object sender, EventArgs e)
         {
                 cb_soundcard.Enabled = false;
@@ -70,20 +70,31 @@ namespace AudioLogger
                 cb_lenght.Enabled = false;
                 cb_path_wav.Enabled = false;
                 cb_path_mp3.Enabled = false;
+                r_mp3.Enabled = false;
+                r_wav.Enabled = false;
+                cb_uploadFtp.Enabled = false;
+
                 this.Invoke(new MethodInvoker(delegate() { filelenght = cb_lenght.Text; }));
                 this.Invoke(new MethodInvoker(delegate() { filepathWav = cb_path_wav.Text; }));
                 this.Invoke(new MethodInvoker(delegate() { filepathMp3 = cb_path_mp3.Text; }));
-
                 this.Invoke(new MethodInvoker(delegate() { progressTotal = progressBar1.Maximum; }));
                 this.Invoke(new MethodInvoker(delegate() { progress = progressBar1.Value; }));
-
+                if (r_mp3.Checked)
+                {
+                    filetype = "mp3";
+                }
+                else
+                {
+                    filetype = "wav";
+                }
+                if (!cb_uploadFtp.Checked) {
+                    filetype = null;
+                }
                 inzinierius.RunWorkerAsync();
         }
 
         public void btn_stop_Click(object sender, EventArgs e)
         {
-
-            l_status.Invoke((MethodInvoker)delegate { l_status.Text = "Stopping at cycle end."; });
             inzinierius.CancelAsync();
         }
 
@@ -96,19 +107,12 @@ namespace AudioLogger
         {
             do
             {
-                Recorder kasete = new Recorder(deviceId, filepathWav, filepathMp3);
-
+                Recorder kasete = new Recorder(deviceId, filepathWav, filepathMp3, filetype);
                 DateTime now = DateTime.Now;
                 int fileLenghtrequested = Convert.ToInt32(filelenght);
                 DateTime endofSpan = roundup(now, TimeSpan.FromMinutes(fileLenghtrequested));
                 TimeSpan span = endofSpan.Subtract(now);
-
                 int sleeptime = 1000 * Convert.ToInt32(span.TotalSeconds) + 1000;
-
-                l_status.Invoke((MethodInvoker)delegate { l_status.Text = "Next file will be " + span.Minutes + " min. long."; });
-
-                Debug.WriteLine("Sleep time: " + sleeptime.ToString());
-                Debug.WriteLine("Creating file of " + span.Minutes + " min.");
                 progressTotal = Convert.ToInt32(sleeptime);
                 int i = 0;
 
@@ -117,7 +121,6 @@ namespace AudioLogger
                     i++;
                     progress = i;
                     Thread.Sleep(1);
-                    Debug.WriteLine(progress);
                 }
 
                 kasete.disableRecorder();
@@ -134,7 +137,9 @@ namespace AudioLogger
             cb_lenght.Enabled = true;
             cb_path_wav.Enabled = true;
             cb_path_mp3.Enabled = true;
-            l_status.Text = "Stopped.";
+            r_mp3.Enabled = true;
+            r_wav.Enabled = true;
+            cb_uploadFtp.Enabled = true;
         }
 
         private void bt_Save_Click(object sender, EventArgs e)
@@ -142,8 +147,7 @@ namespace AudioLogger
             config.IniWriteValue("ftp", "host", tb_hostname.Text);
             config.IniWriteValue("ftp", "targetDir", tb_directory.Text);
             config.IniWriteValue("ftp", "user", tb_username.Text);
-            config.IniWriteValue("ftp", "pass", tb_password.Text);
-            
+            config.IniWriteValue("ftp", "pass", tb_password.Text);          
             config.IniWriteValue("file", "pathWav", cb_path_wav.Text);
             config.IniWriteValue("file", "pathMp3", cb_path_mp3.Text);
             config.IniWriteValue("file", "span", cb_lenght.Text);

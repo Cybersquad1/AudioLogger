@@ -22,13 +22,16 @@ namespace AudioLogger
        public string fullpathwav = null;
        public string fullpathmp3 = null;
        public string filenameMp3 = null;
+       public string filenameWav = null;
+       public string uploadtype = null;
 
-        public Recorder(int deviceId, string pathWav, string pathMp3)
+        public Recorder(int deviceId, string pathWav, string pathMp3, string filetype)
            {
-                enableRecorder(deviceId, pathWav, pathMp3);
+               uploadtype = filetype;
+                enableRecorder(deviceId, pathWav, pathMp3, filetype);
            }
 
-        public void enableRecorder(int device, string pathWav, string pathMp3)
+        public void enableRecorder(int device, string pathWav, string pathMp3, string filetype)
         {
             waveSource = new WaveInEvent();
             waveSource.DeviceNumber = device;
@@ -38,7 +41,9 @@ namespace AudioLogger
             string now = DateTime.Now.ToString("yyyyMMdd-HHmmss");
             fullpathwav = pathWav + @"\" + now + ".wav";
             fullpathmp3 = pathMp3 + @"\" + now + ".mp3";
+            filenameWav = now + ".wav";
             filenameMp3 = now + ".mp3";
+            
             waveFile = new WaveFileWriter(fullpathwav, waveSource.WaveFormat);
             try
             {
@@ -85,8 +90,23 @@ namespace AudioLogger
             {
                 rdr.CopyTo(wtr);
             }
-            FtpHandler serveris = new FtpHandler();
-            serveris.Upload(fullpathmp3, filenameMp3);
+
+           
+            if (uploadtype == "wav")
+            {
+                FtpHandler serveris = new FtpHandler();
+                serveris.Upload(fullpathwav, filenameWav);
+            }
+            else if (uploadtype == "mp3")
+            {
+                FtpHandler serveris = new FtpHandler();
+                serveris.Upload(fullpathmp3, filenameMp3);
+            }
+            else
+            {
+                Debug.WriteLine("No FTP upload");
+            }
+            
         }
     }
 }
