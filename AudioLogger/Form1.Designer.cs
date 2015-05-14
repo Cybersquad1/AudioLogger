@@ -38,12 +38,12 @@
             this.cb_path_wav = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.cb_path_mp3 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.bt_Save = new System.Windows.Forms.Button();
             this.tb_password = new System.Windows.Forms.TextBox();
             this.tb_username = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -52,9 +52,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tb_hostname = new System.Windows.Forms.TextBox();
+            this.bt_Save = new System.Windows.Forms.Button();
             this.l_status = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -74,7 +74,7 @@
             // btn_stop
             // 
             this.btn_stop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_stop.Location = new System.Drawing.Point(304, 211);
+            this.btn_stop.Location = new System.Drawing.Point(304, 227);
             this.btn_stop.Name = "btn_stop";
             this.btn_stop.Size = new System.Drawing.Size(94, 40);
             this.btn_stop.TabIndex = 8;
@@ -85,7 +85,7 @@
             // btn_start
             // 
             this.btn_start.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_start.Location = new System.Drawing.Point(304, 187);
+            this.btn_start.Location = new System.Drawing.Point(304, 203);
             this.btn_start.Name = "btn_start";
             this.btn_start.Size = new System.Drawing.Size(94, 23);
             this.btn_start.TabIndex = 9;
@@ -147,10 +147,17 @@
             this.groupBox2.Controls.Add(this.cb_lenght);
             this.groupBox2.Location = new System.Drawing.Point(12, 76);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(392, 74);
+            this.groupBox2.Size = new System.Drawing.Size(392, 97);
             this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "File settings";
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(228, 45);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(158, 21);
+            this.progressBar1.TabIndex = 21;
             // 
             // label3
             // 
@@ -202,23 +209,12 @@
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.tb_hostname);
-            this.groupBox3.Location = new System.Drawing.Point(12, 157);
+            this.groupBox3.Location = new System.Drawing.Point(12, 173);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(286, 94);
             this.groupBox3.TabIndex = 17;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "FTP";
-            // 
-            // bt_Save
-            // 
-            this.bt_Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bt_Save.Location = new System.Drawing.Point(304, 163);
-            this.bt_Save.Name = "bt_Save";
-            this.bt_Save.Size = new System.Drawing.Size(94, 23);
-            this.bt_Save.TabIndex = 18;
-            this.bt_Save.Text = "Save";
-            this.bt_Save.UseVisualStyleBackColor = true;
-            this.bt_Save.Click += new System.EventHandler(this.bt_Save_Click);
             // 
             // tb_password
             // 
@@ -288,10 +284,21 @@
             this.tb_hostname.Size = new System.Drawing.Size(206, 13);
             this.tb_hostname.TabIndex = 0;
             // 
+            // bt_Save
+            // 
+            this.bt_Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bt_Save.Location = new System.Drawing.Point(304, 179);
+            this.bt_Save.Name = "bt_Save";
+            this.bt_Save.Size = new System.Drawing.Size(94, 23);
+            this.bt_Save.TabIndex = 18;
+            this.bt_Save.Text = "Save";
+            this.bt_Save.UseVisualStyleBackColor = true;
+            this.bt_Save.Click += new System.EventHandler(this.bt_Save_Click);
+            // 
             // l_status
             // 
             this.l_status.AutoSize = true;
-            this.l_status.Location = new System.Drawing.Point(12, 254);
+            this.l_status.Location = new System.Drawing.Point(12, 270);
             this.l_status.Name = "l_status";
             this.l_status.Size = new System.Drawing.Size(39, 13);
             this.l_status.TabIndex = 20;
@@ -303,17 +310,10 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(228, 45);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(158, 21);
-            this.progressBar1.TabIndex = 21;
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(364, 254);
+            this.label8.Location = new System.Drawing.Point(364, 270);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(34, 13);
             this.label8.TabIndex = 21;
@@ -324,7 +324,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(418, 272);
+            this.ClientSize = new System.Drawing.Size(412, 291);
             this.Controls.Add(this.bt_Save);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.l_status);
