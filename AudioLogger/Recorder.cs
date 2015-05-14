@@ -23,16 +23,20 @@ namespace AudioLogger
        public string fullpathmp3 = null;
        public string filenameMp3 = null;
        public string filenameWav = null;
-       public string uploadtype = null;
+       public string fileType = null;
        public bool keepMp3Flag;
        public bool keepWavFlag;
+       public string uploadDir;
+       public string uploadType;
 
-        public Recorder(int deviceId, string pathWav, string pathMp3, string filetype, bool keepMp3, bool keepWav)
-           {
-               uploadtype = filetype;
-               keepMp3Flag = keepMp3;
-               keepWavFlag = keepWav;
-                enableRecorder(deviceId, pathWav, pathMp3, filetype);
+        public Recorder(int deviceId, string pathWav, string pathMp3, string filetype, bool keepMp3, bool keepWav, string uploadtype, string uploaddirectory)
+        {
+            fileType = filetype;
+            uploadDir = uploaddirectory;
+            uploadType = uploadtype;
+            keepMp3Flag = keepMp3;
+            keepWavFlag = keepWav;
+            enableRecorder(deviceId, pathWav, pathMp3, filetype);
            }
 
         public void enableRecorder(int device, string pathWav, string pathMp3, string filetype)
@@ -97,23 +101,31 @@ namespace AudioLogger
                 rdr.CopyTo(wtr);
             }
 
-           ///////////////////// What to upload and where to
-            if (uploadtype == "wav") {
-                FtpHandler serveris = new FtpHandler();
-                serveris.Upload(fullpathwav, filenameWav);
+           // What to upload and where to
+            if (fileType == "wav") {
+                if (uploadType == "FTP")
+                {
+                    FtpHandler serveris = new FtpHandler();
+                    serveris.Upload(fullpathwav, filenameWav);
+                }
+                else
+                {
+                   File.Copy(fullpathwav, uploadDir, true);
+                }
             }
-            else if (uploadtype == "mp3") {
-                FtpHandler serveris = new FtpHandler();
-                serveris.Upload(fullpathmp3, filenameMp3);
-            }
-            else if (uploadtype == "wav2dir") {
-                File.Copy(fullpathwav, @"C:\"); //hardcoded path
-            }
-            else if (uploadtype == "mp3dir") {
-                File.Copy(fullpathmp3, @"C:\"); //hardcoded path
+            else if (fileType == "mp3") {
+                if (uploadType == "FTP")
+                {
+                    FtpHandler serveris = new FtpHandler();
+                    serveris.Upload(fullpathmp3, filenameMp3);
+                }
+                else
+                {
+                    File.Copy(fullpathmp3, uploadDir, true);
+                } 
             }
 
-            ////////////////// Should we keep local files?
+            // Should we keep local files?
             if (!keepMp3Flag)
             {
                 File.Delete(fullpathmp3);

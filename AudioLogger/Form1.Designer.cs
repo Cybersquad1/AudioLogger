@@ -48,7 +48,6 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.r_mp3 = new System.Windows.Forms.RadioButton();
             this.r_wav = new System.Windows.Forms.RadioButton();
-            this.cb_uploadFtp = new System.Windows.Forms.CheckBox();
             this.tb_password = new System.Windows.Forms.TextBox();
             this.tb_username = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -62,6 +61,7 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tb_fileUploadDir = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.cb_uploadType = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -71,6 +71,7 @@
             // 
             // cb_soundcard
             // 
+            this.cb_soundcard.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_soundcard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cb_soundcard.FormattingEnabled = true;
             this.cb_soundcard.Location = new System.Drawing.Point(6, 19);
@@ -268,16 +269,6 @@
             this.r_wav.Text = ".wav";
             this.r_wav.UseVisualStyleBackColor = true;
             // 
-            // cb_uploadFtp
-            // 
-            this.cb_uploadFtp.AutoSize = true;
-            this.cb_uploadFtp.Location = new System.Drawing.Point(10, 19);
-            this.cb_uploadFtp.Name = "cb_uploadFtp";
-            this.cb_uploadFtp.Size = new System.Drawing.Size(95, 17);
-            this.cb_uploadFtp.TabIndex = 24;
-            this.cb_uploadFtp.Text = "Upload to FTP";
-            this.cb_uploadFtp.UseVisualStyleBackColor = true;
-            // 
             // tb_password
             // 
             this.tb_password.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -371,11 +362,12 @@
             this.groupBox4.Size = new System.Drawing.Size(286, 57);
             this.groupBox4.TabIndex = 27;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "File copy";
+            this.groupBox4.Text = "Directory";
             // 
             // tb_fileUploadDir
             // 
             this.tb_fileUploadDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_fileUploadDir.ForeColor = System.Drawing.SystemColors.MenuText;
             this.tb_fileUploadDir.Location = new System.Drawing.Point(10, 19);
             this.tb_fileUploadDir.Name = "tb_fileUploadDir";
             this.tb_fileUploadDir.Size = new System.Drawing.Size(265, 20);
@@ -384,7 +376,7 @@
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.cb_uploadFtp);
+            this.groupBox5.Controls.Add(this.cb_uploadType);
             this.groupBox5.Controls.Add(this.r_wav);
             this.groupBox5.Controls.Add(this.r_mp3);
             this.groupBox5.Location = new System.Drawing.Point(12, 184);
@@ -393,6 +385,19 @@
             this.groupBox5.TabIndex = 28;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Upload settings";
+            // 
+            // cb_uploadType
+            // 
+            this.cb_uploadType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_uploadType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cb_uploadType.FormattingEnabled = true;
+            this.cb_uploadType.Items.AddRange(new object[] {
+            "FTP",
+            "Directory"});
+            this.cb_uploadType.Location = new System.Drawing.Point(10, 18);
+            this.cb_uploadType.Name = "cb_uploadType";
+            this.cb_uploadType.Size = new System.Drawing.Size(145, 21);
+            this.cb_uploadType.TabIndex = 27;
             // 
             // Form1
             // 
@@ -458,10 +463,10 @@
         private System.Windows.Forms.CheckBox cb_keepWav;
         private System.Windows.Forms.RadioButton r_mp3;
         private System.Windows.Forms.RadioButton r_wav;
-        private System.Windows.Forms.CheckBox cb_uploadFtp;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.TextBox tb_fileUploadDir;
         private System.Windows.Forms.GroupBox groupBox5;
+        public System.Windows.Forms.ComboBox cb_uploadType;
     }
 }
 
