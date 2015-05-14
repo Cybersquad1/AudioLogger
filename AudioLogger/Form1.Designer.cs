@@ -38,12 +38,17 @@
             this.cb_path_wav = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cb_keepMp3 = new System.Windows.Forms.CheckBox();
+            this.cb_keepWav = new System.Windows.Forms.CheckBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.cb_path_mp3 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.r_mp3 = new System.Windows.Forms.RadioButton();
+            this.r_wav = new System.Windows.Forms.RadioButton();
+            this.cb_uploadFtp = new System.Windows.Forms.CheckBox();
             this.tb_password = new System.Windows.Forms.TextBox();
             this.tb_username = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -54,11 +59,6 @@
             this.tb_hostname = new System.Windows.Forms.TextBox();
             this.bt_Save = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.cb_keepWav = new System.Windows.Forms.CheckBox();
-            this.cb_uploadFtp = new System.Windows.Forms.CheckBox();
-            this.cb_keepMp3 = new System.Windows.Forms.CheckBox();
-            this.r_wav = new System.Windows.Forms.RadioButton();
-            this.r_mp3 = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -157,6 +157,26 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "File settings";
             // 
+            // cb_keepMp3
+            // 
+            this.cb_keepMp3.AutoSize = true;
+            this.cb_keepMp3.Location = new System.Drawing.Point(225, 48);
+            this.cb_keepMp3.Name = "cb_keepMp3";
+            this.cb_keepMp3.Size = new System.Drawing.Size(118, 17);
+            this.cb_keepMp3.TabIndex = 23;
+            this.cb_keepMp3.Text = "Keep local .mp3 file";
+            this.cb_keepMp3.UseVisualStyleBackColor = true;
+            // 
+            // cb_keepWav
+            // 
+            this.cb_keepWav.AutoSize = true;
+            this.cb_keepWav.Location = new System.Drawing.Point(225, 21);
+            this.cb_keepWav.Name = "cb_keepWav";
+            this.cb_keepWav.Size = new System.Drawing.Size(118, 17);
+            this.cb_keepWav.TabIndex = 22;
+            this.cb_keepWav.Text = "Keep local .wav file";
+            this.cb_keepWav.UseVisualStyleBackColor = true;
+            // 
             // progressBar1
             // 
             this.progressBar1.Location = new System.Drawing.Point(225, 72);
@@ -223,6 +243,38 @@
             this.groupBox3.TabIndex = 17;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "FTP";
+            // 
+            // r_mp3
+            // 
+            this.r_mp3.AutoSize = true;
+            this.r_mp3.Checked = true;
+            this.r_mp3.Location = new System.Drawing.Point(225, 10);
+            this.r_mp3.Name = "r_mp3";
+            this.r_mp3.Size = new System.Drawing.Size(48, 17);
+            this.r_mp3.TabIndex = 26;
+            this.r_mp3.TabStop = true;
+            this.r_mp3.Text = ".mp3";
+            this.r_mp3.UseVisualStyleBackColor = true;
+            // 
+            // r_wav
+            // 
+            this.r_wav.AutoSize = true;
+            this.r_wav.Location = new System.Drawing.Point(171, 10);
+            this.r_wav.Name = "r_wav";
+            this.r_wav.Size = new System.Drawing.Size(48, 17);
+            this.r_wav.TabIndex = 25;
+            this.r_wav.Text = ".wav";
+            this.r_wav.UseVisualStyleBackColor = true;
+            // 
+            // cb_uploadFtp
+            // 
+            this.cb_uploadFtp.AutoSize = true;
+            this.cb_uploadFtp.Location = new System.Drawing.Point(69, 10);
+            this.cb_uploadFtp.Name = "cb_uploadFtp";
+            this.cb_uploadFtp.Size = new System.Drawing.Size(95, 17);
+            this.cb_uploadFtp.TabIndex = 24;
+            this.cb_uploadFtp.Text = "Upload to FTP";
+            this.cb_uploadFtp.UseVisualStyleBackColor = true;
             // 
             // tb_password
             // 
@@ -308,58 +360,6 @@
             this.timer1.Enabled = true;
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // cb_keepWav
-            // 
-            this.cb_keepWav.AutoSize = true;
-            this.cb_keepWav.Location = new System.Drawing.Point(225, 21);
-            this.cb_keepWav.Name = "cb_keepWav";
-            this.cb_keepWav.Size = new System.Drawing.Size(93, 17);
-            this.cb_keepWav.TabIndex = 22;
-            this.cb_keepWav.Text = "Keep .wav file";
-            this.cb_keepWav.UseVisualStyleBackColor = true;
-            // 
-            // cb_uploadFtp
-            // 
-            this.cb_uploadFtp.AutoSize = true;
-            this.cb_uploadFtp.Location = new System.Drawing.Point(69, 10);
-            this.cb_uploadFtp.Name = "cb_uploadFtp";
-            this.cb_uploadFtp.Size = new System.Drawing.Size(95, 17);
-            this.cb_uploadFtp.TabIndex = 24;
-            this.cb_uploadFtp.Text = "Upload to FTP";
-            this.cb_uploadFtp.UseVisualStyleBackColor = true;
-            // 
-            // cb_keepMp3
-            // 
-            this.cb_keepMp3.AutoSize = true;
-            this.cb_keepMp3.Location = new System.Drawing.Point(225, 48);
-            this.cb_keepMp3.Name = "cb_keepMp3";
-            this.cb_keepMp3.Size = new System.Drawing.Size(93, 17);
-            this.cb_keepMp3.TabIndex = 23;
-            this.cb_keepMp3.Text = "Keep .mp3 file";
-            this.cb_keepMp3.UseVisualStyleBackColor = true;
-            // 
-            // r_wav
-            // 
-            this.r_wav.AutoSize = true;
-            this.r_wav.Location = new System.Drawing.Point(171, 10);
-            this.r_wav.Name = "r_wav";
-            this.r_wav.Size = new System.Drawing.Size(48, 17);
-            this.r_wav.TabIndex = 25;
-            this.r_wav.TabStop = true;
-            this.r_wav.Text = ".wav";
-            this.r_wav.UseVisualStyleBackColor = true;
-            // 
-            // r_mp3
-            // 
-            this.r_mp3.AutoSize = true;
-            this.r_mp3.Location = new System.Drawing.Point(225, 10);
-            this.r_mp3.Name = "r_mp3";
-            this.r_mp3.Size = new System.Drawing.Size(48, 17);
-            this.r_mp3.TabIndex = 26;
-            this.r_mp3.TabStop = true;
-            this.r_mp3.Text = ".mp3";
-            this.r_mp3.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 

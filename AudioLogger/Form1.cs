@@ -17,7 +17,6 @@ using Ini;
 
 namespace AudioLogger
 {
-  
     public partial class Form1 : Form
     {
         public WaveIn device;
@@ -28,6 +27,8 @@ namespace AudioLogger
         int progressTotal;
         int progress;
         string filetype;
+        bool keepMp3;
+        bool keepWav;
 
         IniFile config = new IniFile(System.IO.Directory.GetCurrentDirectory() + "/config.ini");
 
@@ -60,7 +61,6 @@ namespace AudioLogger
             ComboboxItem selectedDevice = (ComboboxItem)cb_soundcard.SelectedItem;
             deviceId = Convert.ToInt32(selectedDevice.Value);
         }
-
     
         public void btn_start_Click(object sender, EventArgs e)
         {
@@ -73,12 +73,18 @@ namespace AudioLogger
                 r_mp3.Enabled = false;
                 r_wav.Enabled = false;
                 cb_uploadFtp.Enabled = false;
+                cb_keepMp3.Enabled = false;
+                cb_keepWav.Enabled = false;
 
                 this.Invoke(new MethodInvoker(delegate() { filelenght = cb_lenght.Text; }));
                 this.Invoke(new MethodInvoker(delegate() { filepathWav = cb_path_wav.Text; }));
                 this.Invoke(new MethodInvoker(delegate() { filepathMp3 = cb_path_mp3.Text; }));
                 this.Invoke(new MethodInvoker(delegate() { progressTotal = progressBar1.Maximum; }));
                 this.Invoke(new MethodInvoker(delegate() { progress = progressBar1.Value; }));
+                this.Invoke(new MethodInvoker(delegate() { keepMp3 = cb_keepMp3.Checked; }));
+                this.Invoke(new MethodInvoker(delegate() { keepWav = cb_keepWav.Checked; }));
+
+
                 if (r_mp3.Checked)
                 {
                     filetype = "mp3";
@@ -107,7 +113,7 @@ namespace AudioLogger
         {
             do
             {
-                Recorder kasete = new Recorder(deviceId, filepathWav, filepathMp3, filetype);
+                Recorder kasete = new Recorder(deviceId, filepathWav, filepathMp3, filetype, keepMp3, keepWav);
                 DateTime now = DateTime.Now;
                 int fileLenghtrequested = Convert.ToInt32(filelenght);
                 DateTime endofSpan = roundup(now, TimeSpan.FromMinutes(fileLenghtrequested));
@@ -121,6 +127,7 @@ namespace AudioLogger
                     i++;
                     progress = i;
                     Thread.Sleep(1);
+                    if (this.inzinierius.CancellationPending) { i = sleeptime; }
                 }
 
                 kasete.disableRecorder();
@@ -140,6 +147,8 @@ namespace AudioLogger
             r_mp3.Enabled = true;
             r_wav.Enabled = true;
             cb_uploadFtp.Enabled = true;
+            cb_keepMp3.Enabled = true;
+            cb_keepWav.Enabled = true;
         }
 
         private void bt_Save_Click(object sender, EventArgs e)

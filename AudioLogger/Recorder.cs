@@ -24,10 +24,14 @@ namespace AudioLogger
        public string filenameMp3 = null;
        public string filenameWav = null;
        public string uploadtype = null;
+       public bool keepMp3Flag;
+       public bool keepWavFlag;
 
-        public Recorder(int deviceId, string pathWav, string pathMp3, string filetype)
+        public Recorder(int deviceId, string pathWav, string pathMp3, string filetype, bool keepMp3, bool keepWav)
            {
                uploadtype = filetype;
+               keepMp3Flag = keepMp3;
+               keepWavFlag = keepWav;
                 enableRecorder(deviceId, pathWav, pathMp3, filetype);
            }
 
@@ -38,12 +42,13 @@ namespace AudioLogger
             waveSource.WaveFormat = new WaveFormat(44100, 16, 2);
             waveSource.DataAvailable += new EventHandler<WaveInEventArgs>(waveSource_DataAvailable);
             waveSource.RecordingStopped += new EventHandler<StoppedEventArgs>(waveSource_RecordingStopped);
+
             string now = DateTime.Now.ToString("yyyyMMdd-HHmmss");
             fullpathwav = pathWav + @"\" + now + ".wav";
             fullpathmp3 = pathMp3 + @"\" + now + ".mp3";
             filenameWav = now + ".wav";
             filenameMp3 = now + ".mp3";
-            
+
             waveFile = new WaveFileWriter(fullpathwav, waveSource.WaveFormat);
             try
             {
@@ -81,6 +86,7 @@ namespace AudioLogger
 
         public void Wav2Mp3()
         {
+            /////////////////// Convert wav to mp3
             Thread.Sleep(1000);
             MemoryStream wavefilesource = new MemoryStream(File.ReadAllBytes(fullpathwav));
             wavefilesource.Seek(0, SeekOrigin.Begin);
@@ -91,22 +97,31 @@ namespace AudioLogger
                 rdr.CopyTo(wtr);
             }
 
-           
-            if (uploadtype == "wav")
-            {
+           ///////////////////// What to upload and where to
+            if (uploadtype == "wav") {
                 FtpHandler serveris = new FtpHandler();
                 serveris.Upload(fullpathwav, filenameWav);
             }
-            else if (uploadtype == "mp3")
-            {
+            else if (uploadtype == "mp3") {
                 FtpHandler serveris = new FtpHandler();
                 serveris.Upload(fullpathmp3, filenameMp3);
             }
-            else
-            {
-                Debug.WriteLine("No FTP upload");
+            else if (uploadtype == "wav2dir") {
+                File.Copy(fullpathwav, @"C:\"); //hardcoded path
             }
-            
+            else if (uploadtype == "mp3dir") {
+                File.Copy(fullpathmp3, @"C:\"); //hardcoded path
+            }
+
+            ////////////////// Should we keep local files?
+            if (!keepMp3Flag)
+            {
+                File.Delete(fullpathmp3);
+            }
+            if (!keepWavFlag)
+            {
+                File.Delete(fullpathwav);
+            }
         }
     }
 }
