@@ -6,23 +6,26 @@ using System.Threading;
 using System.Windows.Forms;
 using AudioLogger.Services;
 using Ini;
+using Microsoft.Practices.Unity;
 using NAudio.Wave;
 
 namespace AudioLogger
 {
-    public partial class Form1 : Form
+    public partial class ApplicationForm : Form
     {
         private readonly IniFile _config = new IniFile(Directory.GetCurrentDirectory() + "/config.ini");
         private string _filelenght;
         private string _filepathMp3;
         private string _filepathWav;
-        private IFtpClientService _ftpClientService;
         private int _progress;
         private int _progressTotal;
         public WaveIn Device;
         public int DeviceId;
 
-        public Form1(IFtpClientService ftpClientService)
+        private IFtpClientService _ftpClientService;
+
+        [InjectionConstructor]
+        public ApplicationForm(IFtpClientService ftpClientService)
         {
             if (ftpClientService == null) throw new ArgumentException("ftpClientService");
             _ftpClientService = ftpClientService;

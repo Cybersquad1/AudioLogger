@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Microsoft.Practices.Unity;
 
 namespace AudioLogger
 {
@@ -11,9 +12,12 @@ namespace AudioLogger
         [STAThread]
         private static void Main()
         {
+            Bootstrap bootstrap = new Bootstrap();
+            var container = bootstrap.Container();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(container.Resolve<ApplicationForm>());
         }
     }
 }
