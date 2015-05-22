@@ -1,6 +1,6 @@
 ﻿namespace AudioLogger
 {
-    partial class Form1
+    partial class ApplicationForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ApplicationForm));
             this.cb_soundcard = new System.Windows.Forms.ComboBox();
             this.btn_stop = new System.Windows.Forms.Button();
             this.btn_start = new System.Windows.Forms.Button();
@@ -38,16 +38,12 @@
             this.cb_path_wav = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cb_keepMp3 = new System.Windows.Forms.CheckBox();
-            this.cb_keepWav = new System.Windows.Forms.CheckBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.cb_path_mp3 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.r_mp3 = new System.Windows.Forms.RadioButton();
-            this.r_wav = new System.Windows.Forms.RadioButton();
             this.tb_password = new System.Windows.Forms.TextBox();
             this.tb_username = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -57,21 +53,16 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tb_hostname = new System.Windows.Forms.TextBox();
             this.bt_Save = new System.Windows.Forms.Button();
+            this.l_status = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.tb_fileUploadDir = new System.Windows.Forms.TextBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.cb_uploadType = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // cb_soundcard
             // 
-            this.cb_soundcard.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_soundcard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cb_soundcard.FormattingEnabled = true;
             this.cb_soundcard.Location = new System.Drawing.Point(6, 19);
@@ -85,7 +76,7 @@
             this.btn_stop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_stop.Location = new System.Drawing.Point(304, 227);
             this.btn_stop.Name = "btn_stop";
-            this.btn_stop.Size = new System.Drawing.Size(94, 23);
+            this.btn_stop.Size = new System.Drawing.Size(94, 40);
             this.btn_stop.TabIndex = 8;
             this.btn_stop.Text = "Stop";
             this.btn_stop.UseVisualStyleBackColor = true;
@@ -94,7 +85,7 @@
             // btn_start
             // 
             this.btn_start.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_start.Location = new System.Drawing.Point(304, 197);
+            this.btn_start.Location = new System.Drawing.Point(304, 203);
             this.btn_start.Name = "btn_start";
             this.btn_start.Size = new System.Drawing.Size(94, 23);
             this.btn_start.TabIndex = 9;
@@ -117,7 +108,7 @@
             "15",
             "30",
             "60"});
-            this.cb_lenght.Location = new System.Drawing.Point(148, 72);
+            this.cb_lenght.Location = new System.Drawing.Point(315, 19);
             this.cb_lenght.Name = "cb_lenght";
             this.cb_lenght.Size = new System.Drawing.Size(71, 21);
             this.cb_lenght.TabIndex = 12;
@@ -147,8 +138,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.cb_keepMp3);
-            this.groupBox2.Controls.Add(this.cb_keepWav);
             this.groupBox2.Controls.Add(this.progressBar1);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label2);
@@ -158,42 +147,22 @@
             this.groupBox2.Controls.Add(this.cb_lenght);
             this.groupBox2.Location = new System.Drawing.Point(12, 76);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(392, 102);
+            this.groupBox2.Size = new System.Drawing.Size(392, 97);
             this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "File settings";
             // 
-            // cb_keepMp3
-            // 
-            this.cb_keepMp3.AutoSize = true;
-            this.cb_keepMp3.Location = new System.Drawing.Point(225, 48);
-            this.cb_keepMp3.Name = "cb_keepMp3";
-            this.cb_keepMp3.Size = new System.Drawing.Size(118, 17);
-            this.cb_keepMp3.TabIndex = 23;
-            this.cb_keepMp3.Text = "Keep local .mp3 file";
-            this.cb_keepMp3.UseVisualStyleBackColor = true;
-            // 
-            // cb_keepWav
-            // 
-            this.cb_keepWav.AutoSize = true;
-            this.cb_keepWav.Location = new System.Drawing.Point(225, 21);
-            this.cb_keepWav.Name = "cb_keepWav";
-            this.cb_keepWav.Size = new System.Drawing.Size(118, 17);
-            this.cb_keepWav.TabIndex = 22;
-            this.cb_keepWav.Text = "Keep local .wav file";
-            this.cb_keepWav.UseVisualStyleBackColor = true;
-            // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(225, 72);
+            this.progressBar1.Location = new System.Drawing.Point(228, 45);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(161, 21);
+            this.progressBar1.Size = new System.Drawing.Size(158, 21);
             this.progressBar1.TabIndex = 21;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 75);
+            this.label3.Location = new System.Drawing.Point(225, 22);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(84, 13);
             this.label3.TabIndex = 17;
@@ -240,39 +209,17 @@
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.tb_hostname);
-            this.groupBox3.Location = new System.Drawing.Point(12, 241);
+            this.groupBox3.Location = new System.Drawing.Point(12, 173);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(286, 100);
+            this.groupBox3.Size = new System.Drawing.Size(286, 94);
             this.groupBox3.TabIndex = 17;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "FTP";
             // 
-            // r_mp3
-            // 
-            this.r_mp3.AutoSize = true;
-            this.r_mp3.Checked = true;
-            this.r_mp3.Location = new System.Drawing.Point(227, 19);
-            this.r_mp3.Name = "r_mp3";
-            this.r_mp3.Size = new System.Drawing.Size(48, 17);
-            this.r_mp3.TabIndex = 26;
-            this.r_mp3.TabStop = true;
-            this.r_mp3.Text = ".mp3";
-            this.r_mp3.UseVisualStyleBackColor = true;
-            // 
-            // r_wav
-            // 
-            this.r_wav.AutoSize = true;
-            this.r_wav.Location = new System.Drawing.Point(171, 19);
-            this.r_wav.Name = "r_wav";
-            this.r_wav.Size = new System.Drawing.Size(48, 17);
-            this.r_wav.TabIndex = 25;
-            this.r_wav.Text = ".wav";
-            this.r_wav.UseVisualStyleBackColor = true;
-            // 
             // tb_password
             // 
             this.tb_password.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.tb_password.Location = new System.Drawing.Point(69, 76);
+            this.tb_password.Location = new System.Drawing.Point(69, 73);
             this.tb_password.Name = "tb_password";
             this.tb_password.Size = new System.Drawing.Size(206, 13);
             this.tb_password.TabIndex = 7;
@@ -280,7 +227,7 @@
             // tb_username
             // 
             this.tb_username.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.tb_username.Location = new System.Drawing.Point(69, 57);
+            this.tb_username.Location = new System.Drawing.Point(69, 54);
             this.tb_username.Name = "tb_username";
             this.tb_username.Size = new System.Drawing.Size(206, 13);
             this.tb_username.TabIndex = 6;
@@ -288,7 +235,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(7, 76);
+            this.label7.Location = new System.Drawing.Point(7, 73);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(56, 13);
             this.label7.TabIndex = 5;
@@ -297,7 +244,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 57);
+            this.label6.Location = new System.Drawing.Point(7, 54);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(58, 13);
             this.label6.TabIndex = 4;
@@ -306,7 +253,7 @@
             // tb_directory
             // 
             this.tb_directory.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.tb_directory.Location = new System.Drawing.Point(69, 38);
+            this.tb_directory.Location = new System.Drawing.Point(69, 35);
             this.tb_directory.Name = "tb_directory";
             this.tb_directory.Size = new System.Drawing.Size(206, 13);
             this.tb_directory.TabIndex = 3;
@@ -314,7 +261,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 38);
+            this.label5.Location = new System.Drawing.Point(7, 35);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(52, 13);
             this.label5.TabIndex = 2;
@@ -323,7 +270,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 19);
+            this.label4.Location = new System.Drawing.Point(7, 16);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(58, 13);
             this.label4.TabIndex = 1;
@@ -332,7 +279,7 @@
             // tb_hostname
             // 
             this.tb_hostname.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.tb_hostname.Location = new System.Drawing.Point(69, 19);
+            this.tb_hostname.Location = new System.Drawing.Point(69, 16);
             this.tb_hostname.Name = "tb_hostname";
             this.tb_hostname.Size = new System.Drawing.Size(206, 13);
             this.tb_hostname.TabIndex = 0;
@@ -340,7 +287,7 @@
             // bt_Save
             // 
             this.bt_Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bt_Save.Location = new System.Drawing.Point(304, 382);
+            this.bt_Save.Location = new System.Drawing.Point(304, 179);
             this.bt_Save.Name = "bt_Save";
             this.bt_Save.Size = new System.Drawing.Size(94, 23);
             this.bt_Save.TabIndex = 18;
@@ -348,66 +295,39 @@
             this.bt_Save.UseVisualStyleBackColor = true;
             this.bt_Save.Click += new System.EventHandler(this.bt_Save_Click);
             // 
+            // l_status
+            // 
+            this.l_status.AutoSize = true;
+            this.l_status.Location = new System.Drawing.Point(12, 270);
+            this.l_status.Name = "l_status";
+            this.l_status.Size = new System.Drawing.Size(39, 13);
+            this.l_status.TabIndex = 20;
+            this.l_status.Text = "ready..";
+            // 
             // timer1
             // 
             this.timer1.Enabled = true;
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // groupBox4
+            // label8
             // 
-            this.groupBox4.Controls.Add(this.tb_fileUploadDir);
-            this.groupBox4.Location = new System.Drawing.Point(12, 348);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(286, 57);
-            this.groupBox4.TabIndex = 27;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Directory";
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(364, 270);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(34, 13);
+            this.label8.TabIndex = 21;
+            this.label8.Text = "v1.01";
             // 
-            // tb_fileUploadDir
-            // 
-            this.tb_fileUploadDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tb_fileUploadDir.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.tb_fileUploadDir.Location = new System.Drawing.Point(10, 19);
-            this.tb_fileUploadDir.Name = "tb_fileUploadDir";
-            this.tb_fileUploadDir.Size = new System.Drawing.Size(265, 20);
-            this.tb_fileUploadDir.TabIndex = 0;
-            this.tb_fileUploadDir.Text = "C:\\";
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.cb_uploadType);
-            this.groupBox5.Controls.Add(this.r_wav);
-            this.groupBox5.Controls.Add(this.r_mp3);
-            this.groupBox5.Location = new System.Drawing.Point(12, 184);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(286, 51);
-            this.groupBox5.TabIndex = 28;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Upload settings";
-            // 
-            // cb_uploadType
-            // 
-            this.cb_uploadType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cb_uploadType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cb_uploadType.FormattingEnabled = true;
-            this.cb_uploadType.Items.AddRange(new object[] {
-            "FTP",
-            "Directory"});
-            this.cb_uploadType.Location = new System.Drawing.Point(10, 18);
-            this.cb_uploadType.Name = "cb_uploadType";
-            this.cb_uploadType.Size = new System.Drawing.Size(145, 21);
-            this.cb_uploadType.TabIndex = 27;
-            // 
-            // Form1
+            // ApplicationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(418, 418);
-            this.Controls.Add(this.groupBox5);
-            this.Controls.Add(this.groupBox4);
+            this.ClientSize = new System.Drawing.Size(412, 291);
             this.Controls.Add(this.bt_Save);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.l_status);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -416,20 +336,17 @@
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "ApplicationForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "AudioLogger v1.2";
+            this.Text = "AudioLogger";
             this.TopMost = true;
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -457,16 +374,10 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox tb_hostname;
         private System.Windows.Forms.Button bt_Save;
+        private System.Windows.Forms.Label l_status;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.CheckBox cb_keepMp3;
-        private System.Windows.Forms.CheckBox cb_keepWav;
-        private System.Windows.Forms.RadioButton r_mp3;
-        private System.Windows.Forms.RadioButton r_wav;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.TextBox tb_fileUploadDir;
-        private System.Windows.Forms.GroupBox groupBox5;
-        public System.Windows.Forms.ComboBox cb_uploadType;
+        private System.Windows.Forms.Label label8;
     }
 }
 
