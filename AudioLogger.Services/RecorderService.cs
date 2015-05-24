@@ -9,6 +9,7 @@ namespace AudioLogger.Services
         private static readonly ILog Logger = LogManager.GetLogger(typeof (RecorderService));
         private WaveFileWriter _waveFile;
         private WaveInEvent _waveSource;
+        public string FilenameWav { get; set; }
         public string FilenameMp3 { get; set; }
         public string Fullpathmp3 { get; set; }
         public string Fullpathwav { get; set; }
@@ -24,6 +25,7 @@ namespace AudioLogger.Services
             Fullpathwav = pathWav + @"\" + now + ".wav";
             Fullpathmp3 = pathMp3 + @"\" + now + ".mp3";
             FilenameMp3 = now + ".mp3";
+            FilenameWav = now + ".wav";
             _waveFile = new WaveFileWriter(Fullpathwav, _waveSource.WaveFormat);
             try
             {
@@ -38,6 +40,7 @@ namespace AudioLogger.Services
         public void StopRecording()
         {
             _waveSource.StopRecording();
+            _waveSource = null;
         }
 
         private void waveSource_DataAvailable(object sender, WaveInEventArgs e)

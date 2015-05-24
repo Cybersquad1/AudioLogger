@@ -31,7 +31,6 @@ namespace AudioLogger.Services
             _fullpathmp3 = fillPathMp3;
             _fullpathwav = fullPathWav;
             _task = new Thread(Wav2Mp3);
-            _task.Start();
         }
 
         public void Wait()

@@ -2,6 +2,7 @@
 {
     public interface IRecorderService
     {
+        string FilenameWav { get; set; }
         string FilenameMp3 { get; set; }
         string Fullpathmp3 { get; set; }
         string Fullpathwav { get; set; }

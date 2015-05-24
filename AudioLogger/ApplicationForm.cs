@@ -14,14 +14,14 @@ namespace AudioLogger
 {
     public partial class ApplicationForm : Form
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(ApplicationForm));
-        private readonly IniFile _config = new IniFile(Directory.GetCurrentDirectory() + "/config.ini");
-        private readonly IRecorderService _recorderService;
+        private static readonly ILog Logger = LogManager.GetLogger(typeof (ApplicationForm));
+        private readonly IniFile _config = new IniFile(Directory.GetCurrentDirectory() + "\\config.ini");
         private readonly IConverterService _converterService;
+        private readonly IFtpClientService _ftpClientService;
+        private readonly IRecorderService _recorderService;
         private string _filelenght;
         private string _filepathMp3;
         private string _filepathWav;
-        private IFtpClientService _ftpClientService;
         private int _progress;
         private int _progressTotal;
         public WaveIn Device;
@@ -126,31 +126,26 @@ namespace AudioLogger
                 }
 
                 _recorderService.StopRecording();
-                Task asyncTask = AsyncConvertAndUpload();
-                asyncTask.Start();
-
+                var asyncTask = new Thread(AsyncConvertAndUpload);
             } while (!inzinierius.CancellationPending);
 
             e.Cancel = true;
         }
 
-        async Task AsyncConvertAndUpload()
+        private void AsyncConvertAndUpload()
         {
-            _converterService.AsyncConvert(_filepathWav, _filepathMp3);
+            _converterService.AsyncConvert(_filepathWav + _recorderService.FilenameWav, _filepathMp3 + _recorderService.FilenameMp3);
             _converterService.Wait();
 
             // Retry cycle
-            int retryCount = 3;
-            for (int i = 0; i < retryCount; i++)
+            var retryCount = 3;
+            for (var i = 0; i < retryCount; i++)
             {
                 if (_ftpClientService.TryUploadFile(_filepathMp3, _recorderService.FilenameMp3))
                 {
                     break;
                 }
-                else
-                {
-                    Logger.Warn(string.Format("Attempt {0} failed", i + 1));
-                }
+                Logger.Warn(string.Format("Attempt {0} failed", i + 1));
                 if (i < retryCount)
                 {
                     Logger.Error("Failed to upload file");
