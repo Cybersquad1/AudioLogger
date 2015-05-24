@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AudioLogger {
+namespace AudioLogger.Aplication {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

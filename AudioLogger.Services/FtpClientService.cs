@@ -54,7 +54,7 @@ namespace AudioLogger.Services
             webRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
             webRequest.Credentials = new NetworkCredential(Username, Password);
 
-            int count = 0;
+            var count = 0;
             var webResponse = webRequest.GetResponse() as FtpWebResponse;
             if (webResponse != null)
             {
@@ -65,6 +65,7 @@ namespace AudioLogger.Services
                         using (var streamReader = new StreamReader(stream))
                         {
                             Logger.Info(streamReader.ReadToEnd());
+                            // This feature is still missing, it only logs what is going to be sent
                         }
                     }
                     else throw new WebException("Failed to get the response stream");

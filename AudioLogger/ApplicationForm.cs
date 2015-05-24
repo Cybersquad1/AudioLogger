@@ -3,32 +3,40 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AudioLogger.Services;
 using Ini;
-using Microsoft.Practices.Unity;
+using log4net;
 using NAudio.Wave;
 
 namespace AudioLogger
 {
     public partial class ApplicationForm : Form
     {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(ApplicationForm));
         private readonly IniFile _config = new IniFile(Directory.GetCurrentDirectory() + "/config.ini");
+        private readonly IRecorderService _recorderService;
+        private readonly IConverterService _converterService;
         private string _filelenght;
         private string _filepathMp3;
         private string _filepathWav;
+        private IFtpClientService _ftpClientService;
         private int _progress;
         private int _progressTotal;
         public WaveIn Device;
         public int DeviceId;
 
-        private IFtpClientService _ftpClientService;
-
-        [InjectionConstructor]
-        public ApplicationForm(IFtpClientService ftpClientService)
+        public ApplicationForm(IFtpClientService ftpClientService,
+            IRecorderService recorderService,
+            IConverterService converterService)
         {
             if (ftpClientService == null) throw new ArgumentException("ftpClientService");
+            if (recorderService == null) throw new ArgumentException("recorderService");
+
             _ftpClientService = ftpClientService;
+            _recorderService = recorderService;
+            _converterService = converterService;
 
             InitializeComponent();
 
@@ -92,7 +100,7 @@ namespace AudioLogger
         {
             do
             {
-                var kasete = new Recorder(DeviceId, _filepathWav, _filepathMp3);
+                _recorderService.StartRecording(DeviceId, _filepathWav, _filepathMp3);
 
                 var now = DateTime.Now;
                 var fileLenghtrequested = Convert.ToInt32(_filelenght);
@@ -117,10 +125,38 @@ namespace AudioLogger
                     Debug.WriteLine(_progress);
                 }
 
-                kasete.disableRecorder();
+                _recorderService.StopRecording();
+                Task asyncTask = AsyncConvertAndUpload();
+                asyncTask.Start();
+
             } while (!inzinierius.CancellationPending);
 
             e.Cancel = true;
+        }
+
+        async Task AsyncConvertAndUpload()
+        {
+            _converterService.AsyncConvert(_filepathWav, _filepathMp3);
+            _converterService.Wait();
+
+            // Retry cycle
+            int retryCount = 3;
+            for (int i = 0; i < retryCount; i++)
+            {
+                if (_ftpClientService.TryUploadFile(_filepathMp3, _recorderService.FilenameMp3))
+                {
+                    break;
+                }
+                else
+                {
+                    Logger.Warn(string.Format("Attempt {0} failed", i + 1));
+                }
+                if (i < retryCount)
+                {
+                    Logger.Error("Failed to upload file");
+                }
+                Thread.Sleep(2000);
+            }
         }
 
         private void inzinierius_RunWorkCompleted(object sender, RunWorkerCompletedEventArgs e)

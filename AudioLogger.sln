@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioLogger", "AudioLogger\AudioLogger.csproj", "{A234FB29-BD5A-44C8-A033-81BAAD596B60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioLogger.Services", "AudioLogger.Services\AudioLogger.Services.csproj", "{924F3995-47FE-43B8-946E-CBFA339A8CEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A234FB29-BD5A-44C8-A033-81BAAD596B60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A234FB29-BD5A-44C8-A033-81BAAD596B60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A234FB29-BD5A-44C8-A033-81BAAD596B60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{924F3995-47FE-43B8-946E-CBFA339A8CEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{924F3995-47FE-43B8-946E-CBFA339A8CEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{924F3995-47FE-43B8-946E-CBFA339A8CEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{924F3995-47FE-43B8-946E-CBFA339A8CEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AudioLogger.Properties
+namespace AudioLogger.Aplication.Aplication.Properties
 {
 
 

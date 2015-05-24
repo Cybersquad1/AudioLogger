@@ -1,4 +1,4 @@
-﻿namespace AudioLogger {
+﻿namespace AudioLogger.Aplication {
     
     
     // This class allows you to handle specific events on the settings class:
