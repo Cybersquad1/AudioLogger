@@ -69,11 +69,14 @@
             this.bt_minimyze = new System.Windows.Forms.Button();
             this.peak_L = new System.Windows.Forms.ProgressBar();
             this.peak_R = new System.Windows.Forms.ProgressBar();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.settings.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // cb_soundcard
@@ -92,9 +95,9 @@
             // 
             this.btn_stop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_stop.ForeColor = System.Drawing.Color.Red;
-            this.btn_stop.Location = new System.Drawing.Point(447, 46);
+            this.btn_stop.Location = new System.Drawing.Point(502, 119);
             this.btn_stop.Name = "btn_stop";
-            this.btn_stop.Size = new System.Drawing.Size(94, 23);
+            this.btn_stop.Size = new System.Drawing.Size(39, 40);
             this.btn_stop.TabIndex = 8;
             this.btn_stop.TabStop = false;
             this.btn_stop.Text = "Stop";
@@ -105,9 +108,9 @@
             // 
             this.btn_start.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_start.ForeColor = System.Drawing.Color.Green;
-            this.btn_start.Location = new System.Drawing.Point(447, 17);
+            this.btn_start.Location = new System.Drawing.Point(447, 119);
             this.btn_start.Name = "btn_start";
-            this.btn_start.Size = new System.Drawing.Size(94, 23);
+            this.btn_start.Size = new System.Drawing.Size(49, 40);
             this.btn_start.TabIndex = 9;
             this.btn_start.TabStop = false;
             this.btn_start.Text = "Start";
@@ -223,7 +226,7 @@
             // 
             this.progressBar1.Location = new System.Drawing.Point(13, 225);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(528, 21);
+            this.progressBar1.Size = new System.Drawing.Size(428, 21);
             this.progressBar1.Step = 5;
             this.progressBar1.TabIndex = 21;
             // 
@@ -303,7 +306,7 @@
             // bt_Save
             // 
             this.bt_Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bt_Save.Location = new System.Drawing.Point(447, 145);
+            this.bt_Save.Location = new System.Drawing.Point(447, 165);
             this.bt_Save.Name = "bt_Save";
             this.bt_Save.Size = new System.Drawing.Size(94, 23);
             this.bt_Save.TabIndex = 18;
@@ -448,7 +451,7 @@
             // bt_exit
             // 
             this.bt_exit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bt_exit.Location = new System.Drawing.Point(447, 198);
+            this.bt_exit.Location = new System.Drawing.Point(447, 223);
             this.bt_exit.Name = "bt_exit";
             this.bt_exit.Size = new System.Drawing.Size(94, 23);
             this.bt_exit.TabIndex = 30;
@@ -459,12 +462,13 @@
             // bt_minimyze
             // 
             this.bt_minimyze.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bt_minimyze.Location = new System.Drawing.Point(447, 172);
+            this.bt_minimyze.Location = new System.Drawing.Point(447, 194);
             this.bt_minimyze.Name = "bt_minimyze";
             this.bt_minimyze.Size = new System.Drawing.Size(94, 23);
             this.bt_minimyze.TabIndex = 31;
             this.bt_minimyze.Text = "Minimyze";
             this.bt_minimyze.UseVisualStyleBackColor = true;
+            this.bt_minimyze.Click += new System.EventHandler(this.bt_minimyze_Click);
             // 
             // peak_L
             // 
@@ -490,6 +494,23 @@
             this.peak_R.TabIndex = 33;
             this.peak_R.Value = 2;
             // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Visible = true;
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(465, 12);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(76, 66);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 32;
+            this.pictureBox1.TabStop = false;
+            // 
             // ApplicationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -497,6 +518,7 @@
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(553, 253);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.bt_minimyze);
             this.Controls.Add(this.bt_exit);
             this.Controls.Add(this.settings);
@@ -522,6 +544,7 @@
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -567,6 +590,8 @@
         private System.Windows.Forms.Button bt_minimyze;
         private System.Windows.Forms.ProgressBar peak_L;
         private System.Windows.Forms.ProgressBar peak_R;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
