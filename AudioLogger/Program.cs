@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Windows.Forms;
 using log4net;
 using Microsoft.Practices.Unity;
 
-namespace AudioLogger
+namespace AudioLogger.Application
 {
     internal static class Program
     {
@@ -20,9 +19,9 @@ namespace AudioLogger
                 var bootstrap = new Bootstrap();
                 var container = bootstrap.Container();
 
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(container.Resolve<ApplicationForm>());
+                System.Windows.Forms.Application.EnableVisualStyles();
+                System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+                System.Windows.Forms.Application.Run(container.Resolve<ApplicationForm>());
             }
             catch (Exception e)
             {

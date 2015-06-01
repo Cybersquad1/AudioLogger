@@ -1,11 +1,10 @@
 ﻿using System;
-using AudioLogger.Aplication;
 using AudioLogger.Services;
 using Ini;
 using log4net;
 using Microsoft.Practices.Unity;
 
-namespace AudioLogger
+namespace AudioLogger.Application
 {
     public class Bootstrap
     {
