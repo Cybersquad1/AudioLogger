@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AudioLogger {
+namespace AudioLogger.Application {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,7 +25,7 @@ namespace AudioLogger {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("../config.ini")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\config.ini")]
         public string IniFilename {
             get {
                 return ((string)(this["IniFilename"]));

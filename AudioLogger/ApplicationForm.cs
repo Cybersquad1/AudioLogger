@@ -1,19 +1,20 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using AudioLogger.Services;
 using Ini;
-using Microsoft.Practices.Unity;
+using log4net;
 using NAudio.Wave;
 
-namespace AudioLogger
+namespace AudioLogger.Application
 {
     public partial class ApplicationForm : Form
     {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof (ApplicationForm));
         private readonly IniFile _config = new IniFile(Directory.GetCurrentDirectory() + "/config.ini");
+        
         private string _filelenght;
         private string _filepathMp3;
         private string _filepathWav;
@@ -22,13 +23,29 @@ namespace AudioLogger
         public WaveIn Device;
         public int DeviceId;
 
-        private IFtpClientService _ftpClientService;
+        // These were used in the pre-merge Recorder, for now they're unused
+        private string _uploadDirectory;
+        private bool _keepMp3;
+        private bool _keepWav;
+        private string _uploadType;
+        private string _filetype;
 
-        [InjectionConstructor]
-        public ApplicationForm(IFtpClientService ftpClientService)
+
+        private readonly IConverterService _converterService;
+        private readonly IFtpClientService _ftpClientService;
+        private readonly IRecorderService _recorderService;
+
+        public ApplicationForm(IFtpClientService ftpClientService,
+            IRecorderService recorderService,
+            IConverterService converterService)
         {
             if (ftpClientService == null) throw new ArgumentException("ftpClientService");
+            if (recorderService == null) throw new ArgumentException("recorderService");
+            if (converterService == null) throw new ArgumentException("converterService");
+
             _ftpClientService = ftpClientService;
+            _recorderService = recorderService;
+            _converterService = converterService;
 
             InitializeComponent();
 
@@ -46,11 +63,36 @@ namespace AudioLogger
             cb_path_wav.SelectedItem = cb_path_wav.SelectedIndex = 0;
             cb_path_mp3.SelectedItem = cb_path_mp3.SelectedIndex = 0;
 
-
             tb_hostname.Text = _config.IniReadValue("ftp", "host");
             tb_directory.Text = _config.IniReadValue("ftp", "targetDir");
             tb_username.Text = _config.IniReadValue("ftp", "user");
             tb_password.Text = _config.IniReadValue("ftp", "pass");
+
+            if (_config.IniReadValue("file", "keepWav") == "True")
+            {
+                cb_keepWav.Checked = true;
+            }
+            else
+            {
+                cb_keepWav.Checked = false;
+            }
+
+            if (_config.IniReadValue("file", "keepMp3") == "True")
+            {
+                cb_keepMp3.Checked = true;
+            }
+            else
+            {
+                cb_keepMp3.Checked = false;
+            }
+
+            if (_config.IniReadValue("upload", "format") == "wav")
+            {
+                r_wav.Checked = true;
+            }
+
+            cb_uploadType.Text = _config.IniReadValue("upload", "type");
+            tb_fileUploadDir.Text = _config.IniReadValue("directory", "path");
         }
 
         public void set_device(object sender, EventArgs e)
@@ -67,19 +109,38 @@ namespace AudioLogger
             cb_lenght.Enabled = false;
             cb_path_wav.Enabled = false;
             cb_path_mp3.Enabled = false;
+            r_mp3.Enabled = false;
+            r_wav.Enabled = false;
+            cb_uploadType.Enabled = false;
+            cb_keepMp3.Enabled = false;
+            cb_keepWav.Enabled = false;
+            tb_fileUploadDir.Enabled = false;
+
             Invoke(new MethodInvoker(delegate { _filelenght = cb_lenght.Text; }));
             Invoke(new MethodInvoker(delegate { _filepathWav = cb_path_wav.Text; }));
             Invoke(new MethodInvoker(delegate { _filepathMp3 = cb_path_mp3.Text; }));
-
             Invoke(new MethodInvoker(delegate { _progressTotal = progressBar1.Maximum; }));
             Invoke(new MethodInvoker(delegate { _progress = progressBar1.Value; }));
+            Invoke(new MethodInvoker(delegate { _keepMp3 = cb_keepMp3.Checked; }));
+            Invoke(new MethodInvoker(delegate { _keepWav = cb_keepWav.Checked; }));
+            Invoke(new MethodInvoker(delegate { _uploadType = cb_uploadType.Text; }));
+            Invoke(new MethodInvoker(delegate { _uploadDirectory = tb_fileUploadDir.Text; }));
+
+
+            if (r_mp3.Checked)
+            {
+                _filetype = "mp3";
+            }
+            else
+            {
+                _filetype = "wav";
+            }
 
             inzinierius.RunWorkerAsync();
         }
 
         public void btn_stop_Click(object sender, EventArgs e)
         {
-            l_status.Invoke((MethodInvoker) delegate { l_status.Text = "Stopping at cycle end."; });
             inzinierius.CancelAsync();
         }
 
@@ -92,20 +153,12 @@ namespace AudioLogger
         {
             do
             {
-                var kasete = new Recorder(DeviceId, _filepathWav, _filepathMp3);
-
+                _recorderService.StartRecording(DeviceId, _filepathWav, _filepathMp3);
                 var now = DateTime.Now;
                 var fileLenghtrequested = Convert.ToInt32(_filelenght);
                 var endofSpan = roundup(now, TimeSpan.FromMinutes(fileLenghtrequested));
                 var span = endofSpan.Subtract(now);
-
                 var sleeptime = 1000*Convert.ToInt32(span.TotalSeconds) + 1000;
-
-                l_status.Invoke(
-                    (MethodInvoker) delegate { l_status.Text = "Next file will be " + span.Minutes + " min. long."; });
-
-                Debug.WriteLine("Sleep time: " + sleeptime);
-                Debug.WriteLine("Creating file of " + span.Minutes + " min.");
                 _progressTotal = Convert.ToInt32(sleeptime);
                 var i = 0;
 
@@ -114,13 +167,40 @@ namespace AudioLogger
                     i++;
                     _progress = i;
                     Thread.Sleep(1);
-                    Debug.WriteLine(_progress);
+                    if (inzinierius.CancellationPending)
+                    {
+                        i = sleeptime;
+                    }
                 }
 
-                kasete.disableRecorder();
+                _recorderService.StopRecording();
+                new Thread(AsyncConvertAndUpload);
             } while (!inzinierius.CancellationPending);
 
             e.Cancel = true;
+        }
+
+        private void AsyncConvertAndUpload()
+        {
+            _converterService.AsyncConvert(_filepathWav + _recorderService.FilenameWav,
+                _filepathMp3 + _recorderService.FilenameMp3);
+            _converterService.Wait();
+
+            // Retry cycle
+            var retryCount = 3;
+            for (var i = 0; i < retryCount; i++)
+            {
+                if (_ftpClientService.TryUploadFile(_filepathMp3, _recorderService.FilenameMp3))
+                {
+                    break;
+                }
+                Logger.Warn(string.Format("Attempt {0} failed", i + 1));
+                if (i < retryCount)
+                {
+                    Logger.Error("Failed to upload file");
+                }
+                Thread.Sleep(2000);
+            }
         }
 
         private void inzinierius_RunWorkCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -131,11 +211,26 @@ namespace AudioLogger
             cb_lenght.Enabled = true;
             cb_path_wav.Enabled = true;
             cb_path_mp3.Enabled = true;
-            l_status.Text = "Stopped.";
+            r_mp3.Enabled = true;
+            r_wav.Enabled = true;
+            cb_uploadType.Enabled = true;
+            cb_keepMp3.Enabled = true;
+            cb_keepWav.Enabled = true;
         }
 
         private void bt_Save_Click(object sender, EventArgs e)
         {
+            _config.IniWriteValue("upload", "type", cb_uploadType.Text);
+
+            if (r_wav.Checked)
+            {
+                _config.IniWriteValue("upload", "format", "wav");
+            }
+            else
+            {
+                _config.IniWriteValue("upload", "format", "mp3");
+            }
+
             _config.IniWriteValue("ftp", "host", tb_hostname.Text);
             _config.IniWriteValue("ftp", "targetDir", tb_directory.Text);
             _config.IniWriteValue("ftp", "user", tb_username.Text);
@@ -144,6 +239,10 @@ namespace AudioLogger
             _config.IniWriteValue("file", "pathWav", cb_path_wav.Text);
             _config.IniWriteValue("file", "pathMp3", cb_path_mp3.Text);
             _config.IniWriteValue("file", "span", cb_lenght.Text);
+            _config.IniWriteValue("file", "keepWav", cb_keepWav.Checked.ToString());
+            _config.IniWriteValue("file", "keepMp3", cb_keepMp3.Checked.ToString());
+
+            _config.IniWriteValue("directory", "path", tb_fileUploadDir.Text);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -152,16 +251,16 @@ namespace AudioLogger
             progressBar1.Value = _progress;
             progressBar1.Refresh();
         }
-    }
 
-    public class ComboboxItem
-    {
-        public string Text { get; set; }
-        public int Value { get; set; }
-
-        public override string ToString()
+        public class ComboboxItem
         {
-            return Text;
+            public string Text { get; set; }
+            public int Value { get; set; }
+
+            public override string ToString()
+            {
+                return Text;
+            }
         }
     }
 }
