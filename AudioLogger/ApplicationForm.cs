@@ -28,7 +28,7 @@ namespace AudioLogger.Application
         private bool _keepMp3;
         private bool _keepWav;
         private string _uploadType;
-        private string _filetype;
+        private string _filetype; /// <- kodel nepanaudotas?
 
 
         private readonly IConverterService _converterService;
@@ -88,7 +88,7 @@ namespace AudioLogger.Application
 
             if (_config.IniReadValue("upload", "format") == "wav")
             {
-                r_wav.Checked = true;
+                cb_uploadFormat.SelectedText = ".wav";
             }
 
             cb_uploadType.Text = _config.IniReadValue("upload", "type");
@@ -109,8 +109,7 @@ namespace AudioLogger.Application
             cb_lenght.Enabled = false;
             cb_path_wav.Enabled = false;
             cb_path_mp3.Enabled = false;
-            r_mp3.Enabled = false;
-            r_wav.Enabled = false;
+            cb_uploadFormat.Enabled = false;
             cb_uploadType.Enabled = false;
             cb_keepMp3.Enabled = false;
             cb_keepWav.Enabled = false;
@@ -127,14 +126,8 @@ namespace AudioLogger.Application
             Invoke(new MethodInvoker(delegate { _uploadDirectory = tb_fileUploadDir.Text; }));
 
 
-            if (r_mp3.Checked)
-            {
-                _filetype = "mp3";
-            }
-            else
-            {
-                _filetype = "wav";
-            }
+
+            _filetype = cb_uploadFormat.SelectedText.ToString();
 
             inzinierius.RunWorkerAsync();
         }
@@ -153,7 +146,16 @@ namespace AudioLogger.Application
         {
             do
             {
-                _recorderService.StartRecording(DeviceId, _filepathWav, _filepathMp3);
+                try
+                {
+                    _recorderService.StartRecording(DeviceId, _filepathWav, _filepathMp3);
+                }
+                catch(Exception ex)
+                {
+                    Logger.Error(ex.Message);
+                    throw ex;
+                }
+                
                 var now = DateTime.Now;
                 var fileLenghtrequested = Convert.ToInt32(_filelenght);
                 var endofSpan = roundup(now, TimeSpan.FromMinutes(fileLenghtrequested));
@@ -211,25 +213,18 @@ namespace AudioLogger.Application
             cb_lenght.Enabled = true;
             cb_path_wav.Enabled = true;
             cb_path_mp3.Enabled = true;
-            r_mp3.Enabled = true;
-            r_wav.Enabled = true;
+            cb_uploadFormat.Enabled = true;
             cb_uploadType.Enabled = true;
             cb_keepMp3.Enabled = true;
             cb_keepWav.Enabled = true;
+            tb_fileUploadDir.Enabled = true;
         }
 
         private void bt_Save_Click(object sender, EventArgs e)
         {
             _config.IniWriteValue("upload", "type", cb_uploadType.Text);
 
-            if (r_wav.Checked)
-            {
-                _config.IniWriteValue("upload", "format", "wav");
-            }
-            else
-            {
-                _config.IniWriteValue("upload", "format", "mp3");
-            }
+            _config.IniWriteValue("upload", "format", cb_uploadFormat.SelectedText.ToString());
 
             _config.IniWriteValue("ftp", "host", tb_hostname.Text);
             _config.IniWriteValue("ftp", "targetDir", tb_directory.Text);
@@ -261,6 +256,20 @@ namespace AudioLogger.Application
             {
                 return Text;
             }
+        }
+
+        private void bt_browseWinDir_Click(object sender, EventArgs e)
+        {
+            DialogResult result = dx_browseWinDir.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                tb_fileUploadDir.Text = dx_browseWinDir.SelectedPath;
+            }
+        }
+
+        private void bt_exit_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

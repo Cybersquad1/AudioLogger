@@ -33,7 +33,8 @@ namespace AudioLogger.Services
             }
             catch (Exception e)
             {
-                Logger.Warn(e.Message);
+                Logger.Error(e.Message);
+                throw e;
             }
         }
 
