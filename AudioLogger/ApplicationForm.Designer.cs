@@ -73,8 +73,6 @@ namespace AudioLogger.Application
             this.label9 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.settings.SuspendLayout();
             this.tab1.SuspendLayout();
@@ -472,8 +470,6 @@ namespace AudioLogger.Application
             // 
             // tab4
             // 
-            this.tab4.Controls.Add(this.textBox3);
-            this.tab4.Controls.Add(this.label10);
             this.tab4.Controls.Add(this.textBox2);
             this.tab4.Controls.Add(this.textBox1);
             this.tab4.Controls.Add(this.label9);
@@ -523,26 +519,6 @@ namespace AudioLogger.Application
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(183, 20);
             this.textBox2.TabIndex = 3;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(7, 59);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(92, 13);
-            this.label10.TabIndex = 4;
-            this.label10.Text = "Calculated bitrate:";
-            // 
-            // textBox3
-            // 
-            this.textBox3.BackColor = System.Drawing.SystemColors.InactiveBorder;
-            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox3.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.textBox3.Location = new System.Drawing.Point(101, 57);
-            this.textBox3.MaxLength = 100;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(183, 20);
-            this.textBox3.TabIndex = 5;
             // 
             // ApplicationForm
             // 
@@ -626,8 +602,6 @@ namespace AudioLogger.Application
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label txt_version;
         private System.Windows.Forms.TabPage tab4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label9;
