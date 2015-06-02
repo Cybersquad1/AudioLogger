@@ -62,24 +62,24 @@ namespace AudioLogger.Application
             this.tab3 = new System.Windows.Forms.TabPage();
             this.bt_browseWinDir = new System.Windows.Forms.Button();
             this.l_uploadDir = new System.Windows.Forms.Label();
+            this.tab4 = new System.Windows.Forms.TabPage();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.dx_browseWinDir = new System.Windows.Forms.FolderBrowserDialog();
             this.bt_exit = new System.Windows.Forms.Button();
             this.bt_minimyze = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.txt_version = new System.Windows.Forms.Label();
-            this.tab4 = new System.Windows.Forms.TabPage();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.settings.SuspendLayout();
             this.tab1.SuspendLayout();
             this.tab2.SuspendLayout();
             this.tab3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tab4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // cb_soundcard
@@ -418,6 +418,58 @@ namespace AudioLogger.Application
             this.l_uploadDir.TabIndex = 1;
             this.l_uploadDir.Text = "Upload directory:";
             // 
+            // tab4
+            // 
+            this.tab4.BackColor = System.Drawing.Color.Gainsboro;
+            this.tab4.Controls.Add(this.textBox2);
+            this.tab4.Controls.Add(this.textBox1);
+            this.tab4.Controls.Add(this.label9);
+            this.tab4.Controls.Add(this.label2);
+            this.tab4.Location = new System.Drawing.Point(4, 22);
+            this.tab4.Name = "tab4";
+            this.tab4.Padding = new System.Windows.Forms.Padding(3);
+            this.tab4.Size = new System.Drawing.Size(421, 120);
+            this.tab4.TabIndex = 3;
+            this.tab4.Text = "Mp3";
+            // 
+            // textBox2
+            // 
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox2.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.textBox2.Location = new System.Drawing.Point(101, 31);
+            this.textBox2.MaxLength = 100;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(183, 20);
+            this.textBox2.TabIndex = 3;
+            // 
+            // textBox1
+            // 
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox1.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.textBox1.Location = new System.Drawing.Point(101, 5);
+            this.textBox1.MaxLength = 100;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(183, 20);
+            this.textBox1.TabIndex = 2;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(7, 33);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(66, 13);
+            this.label9.TabIndex = 1;
+            this.label9.Text = "Sample rate:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 7);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(70, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Bit resolution:";
+            // 
             // bt_exit
             // 
             this.bt_exit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -468,58 +520,6 @@ namespace AudioLogger.Application
             this.txt_version.TabIndex = 33;
             this.txt_version.Text = "AudioLogger v1.2";
             // 
-            // tab4
-            // 
-            this.tab4.Controls.Add(this.textBox2);
-            this.tab4.Controls.Add(this.textBox1);
-            this.tab4.Controls.Add(this.label9);
-            this.tab4.Controls.Add(this.label2);
-            this.tab4.Location = new System.Drawing.Point(4, 22);
-            this.tab4.Name = "tab4";
-            this.tab4.Padding = new System.Windows.Forms.Padding(3);
-            this.tab4.Size = new System.Drawing.Size(421, 120);
-            this.tab4.TabIndex = 3;
-            this.tab4.Text = "Mp3";
-            this.tab4.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 7);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Bit resolution:";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(7, 33);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(66, 13);
-            this.label9.TabIndex = 1;
-            this.label9.Text = "Sample rate:";
-            // 
-            // textBox1
-            // 
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.textBox1.Location = new System.Drawing.Point(101, 5);
-            this.textBox1.MaxLength = 100;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(183, 20);
-            this.textBox1.TabIndex = 2;
-            // 
-            // textBox2
-            // 
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox2.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.textBox2.Location = new System.Drawing.Point(101, 31);
-            this.textBox2.MaxLength = 100;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(183, 20);
-            this.textBox2.TabIndex = 3;
-            // 
             // ApplicationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -554,9 +554,9 @@ namespace AudioLogger.Application
             this.tab2.PerformLayout();
             this.tab3.ResumeLayout(false);
             this.tab3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tab4.ResumeLayout(false);
             this.tab4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
