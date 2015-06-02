@@ -1,9 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
+# Visual Studio Express 2013 for Windows Desktop
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioLogger.Application", "AudioLogger\AudioLogger.Application.csproj", "{A234FB29-BD5A-44C8-A033-81BAAD596B60}"
+	ProjectSection(ProjectDependencies) = postProject
+		{924F3995-47FE-43B8-946E-CBFA339A8CEE} = {924F3995-47FE-43B8-946E-CBFA339A8CEE}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioLogger.Services", "AudioLogger.Services\AudioLogger.Services.csproj", "{924F3995-47FE-43B8-946E-CBFA339A8CEE}"
 EndProject
