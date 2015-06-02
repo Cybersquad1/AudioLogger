@@ -7,6 +7,9 @@ using AudioLogger.Services;
 using Ini;
 using log4net;
 using NAudio.Wave;
+using System.Runtime.InteropServices;
+
+
 
 namespace AudioLogger.Application
 {
@@ -25,11 +28,7 @@ namespace AudioLogger.Application
 
         // These were used in the pre-merge Recorder, for now they're unused
         private string _uploadDirectory;
-        private bool _keepMp3;
-        private bool _keepWav;
         private string _uploadType;
-        private string _filetype; /// <- kodel nepanaudotas?
-
 
         private readonly IConverterService _converterService;
         private readonly IFtpClientService _ftpClientService;
@@ -67,32 +66,20 @@ namespace AudioLogger.Application
             tb_username.Text = _config.IniReadValue("ftp", "user");
             tb_password.Text = _config.IniReadValue("ftp", "pass");
 
-            if (_config.IniReadValue("file", "keepWav") == "True")
-            {
-                cb_keepWav.Checked = true;
-            }
-            else
-            {
-                cb_keepWav.Checked = false;
-            }
-
-            if (_config.IniReadValue("file", "keepMp3") == "True")
-            {
-                cb_keepMp3.Checked = true;
-            }
-            else
-            {
-                cb_keepMp3.Checked = false;
-            }
-
-            if (_config.IniReadValue("upload", "format") == "wav")
-            {
-                cb_uploadFormat.SelectedText = ".wav";
-            }
-
             cb_uploadType.Text = _config.IniReadValue("upload", "type");
             tb_fileUploadDir.Text = _config.IniReadValue("directory", "path");
         }
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+            if (m.Msg == WM_NCHITTEST)
+                m.Result = (IntPtr)(HT_CAPTION);
+        }
+
+        private const int WM_NCHITTEST = 0x84;
+        private const int HT_CLIENT = 0x1;
+        private const int HT_CAPTION = 0x2;
+
 
         public void set_device(object sender, EventArgs e)
         {
@@ -107,10 +94,7 @@ namespace AudioLogger.Application
             btn_start.Enabled = false;
             cb_lenght.Enabled = false;
             cb_temp_path.Enabled = false;
-            cb_uploadFormat.Enabled = false;
             cb_uploadType.Enabled = false;
-            cb_keepMp3.Enabled = false;
-            cb_keepWav.Enabled = false;
             tb_fileUploadDir.Enabled = false;
 
             Invoke(new MethodInvoker(delegate { _filelenght = cb_lenght.Text; }));
@@ -118,14 +102,8 @@ namespace AudioLogger.Application
             Invoke(new MethodInvoker(delegate { _filepathMp3 = cb_temp_path.Text; }));
             Invoke(new MethodInvoker(delegate { _progressTotal = progressBar1.Maximum; }));
             Invoke(new MethodInvoker(delegate { _progress = progressBar1.Value; }));
-            Invoke(new MethodInvoker(delegate { _keepMp3 = cb_keepMp3.Checked; }));
-            Invoke(new MethodInvoker(delegate { _keepWav = cb_keepWav.Checked; }));
             Invoke(new MethodInvoker(delegate { _uploadType = cb_uploadType.Text; }));
             Invoke(new MethodInvoker(delegate { _uploadDirectory = tb_fileUploadDir.Text; }));
-
-
-
-            _filetype = cb_uploadFormat.SelectedText.ToString();
 
             inzinierius.RunWorkerAsync();
         }
@@ -210,19 +188,13 @@ namespace AudioLogger.Application
             btn_start.Enabled = true;
             cb_lenght.Enabled = true;
             cb_temp_path.Enabled = true;
-            cb_uploadFormat.Enabled = true;
             cb_uploadType.Enabled = true;
-            cb_keepMp3.Enabled = true;
-            cb_keepWav.Enabled = true;
             tb_fileUploadDir.Enabled = true;
         }
 
         private void bt_Save_Click(object sender, EventArgs e)
         {
             _config.IniWriteValue("upload", "type", cb_uploadType.Text);
-
-            _config.IniWriteValue("upload", "format", cb_uploadFormat.SelectedText.ToString());
-
             _config.IniWriteValue("ftp", "host", tb_hostname.Text);
             _config.IniWriteValue("ftp", "targetDir", tb_directory.Text);
             _config.IniWriteValue("ftp", "user", tb_username.Text);
@@ -231,8 +203,6 @@ namespace AudioLogger.Application
             _config.IniWriteValue("file", "pathWav", cb_temp_path.Text);
             _config.IniWriteValue("file", "pathMp3", cb_temp_path.Text);
             _config.IniWriteValue("file", "span", cb_lenght.Text);
-            _config.IniWriteValue("file", "keepWav", cb_keepWav.Checked.ToString());
-            _config.IniWriteValue("file", "keepMp3", cb_keepMp3.Checked.ToString());
 
             _config.IniWriteValue("directory", "path", tb_fileUploadDir.Text);
         }
@@ -278,5 +248,6 @@ namespace AudioLogger.Application
         {
             this.Show();
         }
+
     }
 }

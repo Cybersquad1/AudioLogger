@@ -1,4 +1,5 @@
-﻿namespace AudioLogger.Application
+﻿
+namespace AudioLogger.Application
 {
     partial class ApplicationForm
     {
@@ -39,8 +40,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.peak_R = new System.Windows.Forms.ProgressBar();
             this.peak_L = new System.Windows.Forms.ProgressBar();
-            this.cb_keepMp3 = new System.Windows.Forms.CheckBox();
-            this.cb_keepWav = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -57,29 +56,32 @@
             this.tb_fileUploadDir = new System.Windows.Forms.TextBox();
             this.cb_uploadType = new System.Windows.Forms.ComboBox();
             this.settings = new System.Windows.Forms.TabControl();
+            this.tab1 = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
             this.tab2 = new System.Windows.Forms.TabPage();
             this.tab3 = new System.Windows.Forms.TabPage();
             this.bt_browseWinDir = new System.Windows.Forms.Button();
             this.l_uploadDir = new System.Windows.Forms.Label();
-            this.tab1 = new System.Windows.Forms.TabPage();
-            this.cb_uploadFormat = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.dx_browseWinDir = new System.Windows.Forms.FolderBrowserDialog();
             this.bt_exit = new System.Windows.Forms.Button();
             this.bt_minimyze = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.txt_version = new System.Windows.Forms.Label();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tab4 = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.settings.SuspendLayout();
+            this.tab1.SuspendLayout();
             this.tab2.SuspendLayout();
             this.tab3.SuspendLayout();
-            this.tab1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.tab4.SuspendLayout();
             this.SuspendLayout();
             // 
             // cb_soundcard
@@ -135,9 +137,9 @@
             "15",
             "30",
             "60"});
-            this.cb_lenght.Location = new System.Drawing.Point(179, 65);
+            this.cb_lenght.Location = new System.Drawing.Point(100, 38);
             this.cb_lenght.Name = "cb_lenght";
-            this.cb_lenght.Size = new System.Drawing.Size(71, 21);
+            this.cb_lenght.Size = new System.Drawing.Size(315, 21);
             this.cb_lenght.TabIndex = 12;
             // 
             // cb_temp_path
@@ -150,7 +152,7 @@
             "D:"});
             this.cb_temp_path.Location = new System.Drawing.Point(100, 11);
             this.cb_temp_path.Name = "cb_temp_path";
-            this.cb_temp_path.Size = new System.Drawing.Size(150, 21);
+            this.cb_temp_path.Size = new System.Drawing.Size(315, 21);
             this.cb_temp_path.TabIndex = 13;
             // 
             // groupBox1
@@ -160,7 +162,7 @@
             this.groupBox1.Controls.Add(this.peak_L);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(429, 57);
+            this.groupBox1.Size = new System.Drawing.Size(429, 49);
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Audio Source";
@@ -189,30 +191,10 @@
             this.peak_L.TabIndex = 32;
             this.peak_L.Value = 2;
             // 
-            // cb_keepMp3
-            // 
-            this.cb_keepMp3.AutoSize = true;
-            this.cb_keepMp3.Location = new System.Drawing.Point(87, 35);
-            this.cb_keepMp3.Name = "cb_keepMp3";
-            this.cb_keepMp3.Size = new System.Drawing.Size(59, 17);
-            this.cb_keepMp3.TabIndex = 23;
-            this.cb_keepMp3.Text = "Enable";
-            this.cb_keepMp3.UseVisualStyleBackColor = true;
-            // 
-            // cb_keepWav
-            // 
-            this.cb_keepWav.AutoSize = true;
-            this.cb_keepWav.Location = new System.Drawing.Point(89, 35);
-            this.cb_keepWav.Name = "cb_keepWav";
-            this.cb_keepWav.Size = new System.Drawing.Size(59, 17);
-            this.cb_keepWav.TabIndex = 22;
-            this.cb_keepWav.Text = "Enable";
-            this.cb_keepWav.UseVisualStyleBackColor = true;
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 68);
+            this.label3.Location = new System.Drawing.Point(6, 41);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(84, 13);
             this.label3.TabIndex = 17;
@@ -344,10 +326,10 @@
             this.cb_uploadType.FormattingEnabled = true;
             this.cb_uploadType.Items.AddRange(new object[] {
             "FTP",
-            "Directory"});
-            this.cb_uploadType.Location = new System.Drawing.Point(105, 92);
+            "Windows directory"});
+            this.cb_uploadType.Location = new System.Drawing.Point(100, 65);
             this.cb_uploadType.Name = "cb_uploadType";
-            this.cb_uploadType.Size = new System.Drawing.Size(145, 21);
+            this.cb_uploadType.Size = new System.Drawing.Size(315, 21);
             this.cb_uploadType.TabIndex = 27;
             // 
             // settings
@@ -355,13 +337,37 @@
             this.settings.Controls.Add(this.tab1);
             this.settings.Controls.Add(this.tab2);
             this.settings.Controls.Add(this.tab3);
-            this.settings.Controls.Add(this.tabPage1);
-            this.settings.Controls.Add(this.tabPage2);
+            this.settings.Controls.Add(this.tab4);
             this.settings.Location = new System.Drawing.Point(12, 75);
             this.settings.Name = "settings";
             this.settings.SelectedIndex = 0;
             this.settings.Size = new System.Drawing.Size(429, 146);
             this.settings.TabIndex = 29;
+            // 
+            // tab1
+            // 
+            this.tab1.BackColor = System.Drawing.Color.Gainsboro;
+            this.tab1.Controls.Add(this.cb_temp_path);
+            this.tab1.Controls.Add(this.label8);
+            this.tab1.Controls.Add(this.label1);
+            this.tab1.Controls.Add(this.cb_uploadType);
+            this.tab1.Controls.Add(this.label3);
+            this.tab1.Controls.Add(this.cb_lenght);
+            this.tab1.Location = new System.Drawing.Point(4, 22);
+            this.tab1.Name = "tab1";
+            this.tab1.Padding = new System.Windows.Forms.Padding(3);
+            this.tab1.Size = new System.Drawing.Size(421, 120);
+            this.tab1.TabIndex = 2;
+            this.tab1.Text = "General";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 66);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(74, 13);
+            this.label8.TabIndex = 28;
+            this.label8.Text = "Upload target:";
             // 
             // tab2
             // 
@@ -414,44 +420,6 @@
             this.l_uploadDir.TabIndex = 1;
             this.l_uploadDir.Text = "Upload directory:";
             // 
-            // tab1
-            // 
-            this.tab1.BackColor = System.Drawing.Color.Gainsboro;
-            this.tab1.Controls.Add(this.cb_uploadFormat);
-            this.tab1.Controls.Add(this.cb_temp_path);
-            this.tab1.Controls.Add(this.label8);
-            this.tab1.Controls.Add(this.label1);
-            this.tab1.Controls.Add(this.cb_uploadType);
-            this.tab1.Controls.Add(this.label3);
-            this.tab1.Controls.Add(this.cb_lenght);
-            this.tab1.Location = new System.Drawing.Point(4, 22);
-            this.tab1.Name = "tab1";
-            this.tab1.Padding = new System.Windows.Forms.Padding(3);
-            this.tab1.Size = new System.Drawing.Size(421, 120);
-            this.tab1.TabIndex = 2;
-            this.tab1.Text = "General";
-            // 
-            // cb_uploadFormat
-            // 
-            this.cb_uploadFormat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cb_uploadFormat.FormattingEnabled = true;
-            this.cb_uploadFormat.Items.AddRange(new object[] {
-            "wav",
-            "mp3"});
-            this.cb_uploadFormat.Location = new System.Drawing.Point(256, 93);
-            this.cb_uploadFormat.Name = "cb_uploadFormat";
-            this.cb_uploadFormat.Size = new System.Drawing.Size(117, 21);
-            this.cb_uploadFormat.TabIndex = 29;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 93);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(74, 13);
-            this.label8.TabIndex = 28;
-            this.label8.Text = "Upload target:";
-            // 
             // bt_exit
             // 
             this.bt_exit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -502,27 +470,79 @@
             this.txt_version.TabIndex = 33;
             this.txt_version.Text = "AudioLogger v1.2";
             // 
-            // tabPage1
+            // tab4
             // 
-            this.tabPage1.Controls.Add(this.cb_keepWav);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(421, 120);
-            this.tabPage1.TabIndex = 3;
-            this.tabPage1.Text = "wav";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tab4.Controls.Add(this.textBox3);
+            this.tab4.Controls.Add(this.label10);
+            this.tab4.Controls.Add(this.textBox2);
+            this.tab4.Controls.Add(this.textBox1);
+            this.tab4.Controls.Add(this.label9);
+            this.tab4.Controls.Add(this.label2);
+            this.tab4.Location = new System.Drawing.Point(4, 22);
+            this.tab4.Name = "tab4";
+            this.tab4.Padding = new System.Windows.Forms.Padding(3);
+            this.tab4.Size = new System.Drawing.Size(421, 120);
+            this.tab4.TabIndex = 3;
+            this.tab4.Text = "Mp3";
+            this.tab4.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // label2
             // 
-            this.tabPage2.Controls.Add(this.cb_keepMp3);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(421, 120);
-            this.tabPage2.TabIndex = 4;
-            this.tabPage2.Text = "mp3";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 7);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(70, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Bit resolution:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(7, 33);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(66, 13);
+            this.label9.TabIndex = 1;
+            this.label9.Text = "Sample rate:";
+            // 
+            // textBox1
+            // 
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox1.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.textBox1.Location = new System.Drawing.Point(101, 5);
+            this.textBox1.MaxLength = 100;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(183, 20);
+            this.textBox1.TabIndex = 2;
+            // 
+            // textBox2
+            // 
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox2.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.textBox2.Location = new System.Drawing.Point(101, 31);
+            this.textBox2.MaxLength = 100;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(183, 20);
+            this.textBox2.TabIndex = 3;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(7, 59);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(92, 13);
+            this.label10.TabIndex = 4;
+            this.label10.Text = "Calculated bitrate:";
+            // 
+            // textBox3
+            // 
+            this.textBox3.BackColor = System.Drawing.SystemColors.InactiveBorder;
+            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox3.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.textBox3.Location = new System.Drawing.Point(101, 57);
+            this.textBox3.MaxLength = 100;
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(183, 20);
+            this.textBox3.TabIndex = 5;
             // 
             // ApplicationForm
             // 
@@ -552,17 +572,15 @@
             this.TopMost = true;
             this.groupBox1.ResumeLayout(false);
             this.settings.ResumeLayout(false);
+            this.tab1.ResumeLayout(false);
+            this.tab1.PerformLayout();
             this.tab2.ResumeLayout(false);
             this.tab2.PerformLayout();
             this.tab3.ResumeLayout(false);
             this.tab3.PerformLayout();
-            this.tab1.ResumeLayout(false);
-            this.tab1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.tab4.ResumeLayout(false);
+            this.tab4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -590,8 +608,6 @@
         private System.Windows.Forms.Button bt_Save;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.CheckBox cb_keepMp3;
-        private System.Windows.Forms.CheckBox cb_keepWav;
         private System.Windows.Forms.TextBox tb_fileUploadDir;
         public System.Windows.Forms.ComboBox cb_uploadType;
         private System.Windows.Forms.TabControl settings;
@@ -601,7 +617,6 @@
         private System.Windows.Forms.Label l_uploadDir;
         private System.Windows.Forms.FolderBrowserDialog dx_browseWinDir;
         private System.Windows.Forms.TabPage tab1;
-        public System.Windows.Forms.ComboBox cb_uploadFormat;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button bt_exit;
         private System.Windows.Forms.Button bt_minimyze;
@@ -610,8 +625,13 @@
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label txt_version;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tab4;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label2;
     }
 }
 
