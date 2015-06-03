@@ -1,6 +1,8 @@
 ﻿using System;
 using log4net;
 using NAudio.Wave;
+using System.Diagnostics;
+using NAudio.Wave.SampleProviders;
 
 namespace AudioLogger.Services
 {
@@ -46,6 +48,7 @@ namespace AudioLogger.Services
 
         private void waveSource_DataAvailable(object sender, WaveInEventArgs e)
         {
+
             if (_waveFile != null)
             {
                 _waveFile.Write(e.Buffer, 0, e.BytesRecorded);

@@ -4,10 +4,12 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using AudioLogger.Services;
+using NAudio.CoreAudioApi;
 using Ini;
 using log4net;
 using NAudio.Wave;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 
 
@@ -25,6 +27,7 @@ namespace AudioLogger.Application
         private int _progressTotal;
         public WaveIn Device;
         public int DeviceId;
+        public string DeviceName;
 
         // These were used in the pre-merge Recorder, for now they're unused
         private string _uploadDirectory;
@@ -53,7 +56,7 @@ namespace AudioLogger.Application
             {
                 var deviceInfo = WaveIn.GetCapabilities(waveInDevice);
                 var item = new ComboboxItem();
-                item.Text = deviceInfo.ProductName + " [" + deviceInfo.Channels + "]";
+                item.Text = deviceInfo.ProductName;
                 item.Value = waveInDevice;
                 cb_soundcard.Items.Add(item);
             }
@@ -85,6 +88,7 @@ namespace AudioLogger.Application
         {
             var selectedDevice = (ComboboxItem) cb_soundcard.SelectedItem;
             DeviceId = Convert.ToInt32(selectedDevice.Value);
+            DeviceName = selectedDevice.Text;
         }
 
         public void btn_start_Click(object sender, EventArgs e)
@@ -212,6 +216,19 @@ namespace AudioLogger.Application
             progressBar1.Maximum = _progressTotal;
             progressBar1.Value = _progress;
             progressBar1.Refresh();
+
+            MMDeviceEnumerator de = new MMDeviceEnumerator();
+            
+            var device = (MMDevice)de.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia); //<-- veikia Default input device
+
+            //var device = (MMDevice)de.GetDevice(DeviceName); // <-- niaveikia, crashina, jei nori pasirinkt device is comboBoxo
+            // greiciausiai nes neatitinka DeviceName gautas is WaveIn ir MMDevice ID.
+
+            peak_L.Value = (int)(device.AudioMeterInformation.MasterPeakValue * 50 + 0.25);
+            peak_R.Value = (int)(device.AudioMeterInformation.MasterPeakValue * 50 + 0.25);
+            peak_L.Refresh();
+            peak_R.Refresh();
+            
         }
 
         public class ComboboxItem

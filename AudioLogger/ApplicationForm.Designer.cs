@@ -89,7 +89,7 @@ namespace AudioLogger.Application
             this.cb_soundcard.FormattingEnabled = true;
             this.cb_soundcard.Location = new System.Drawing.Point(6, 19);
             this.cb_soundcard.Name = "cb_soundcard";
-            this.cb_soundcard.Size = new System.Drawing.Size(327, 21);
+            this.cb_soundcard.Size = new System.Drawing.Size(262, 21);
             this.cb_soundcard.TabIndex = 5;
             this.cb_soundcard.TabStop = false;
             this.cb_soundcard.SelectedValueChanged += new System.EventHandler(this.set_device);
@@ -169,9 +169,9 @@ namespace AudioLogger.Application
             // 
             this.peak_R.BackColor = System.Drawing.Color.WhiteSmoke;
             this.peak_R.ForeColor = System.Drawing.Color.DarkGreen;
-            this.peak_R.Location = new System.Drawing.Point(338, 30);
+            this.peak_R.Location = new System.Drawing.Point(274, 30);
             this.peak_R.Name = "peak_R";
-            this.peak_R.Size = new System.Drawing.Size(84, 10);
+            this.peak_R.Size = new System.Drawing.Size(148, 10);
             this.peak_R.Step = 5;
             this.peak_R.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.peak_R.TabIndex = 33;
@@ -181,9 +181,9 @@ namespace AudioLogger.Application
             // 
             this.peak_L.BackColor = System.Drawing.Color.WhiteSmoke;
             this.peak_L.ForeColor = System.Drawing.Color.DarkGreen;
-            this.peak_L.Location = new System.Drawing.Point(338, 18);
+            this.peak_L.Location = new System.Drawing.Point(274, 18);
             this.peak_L.Name = "peak_L";
-            this.peak_L.Size = new System.Drawing.Size(84, 10);
+            this.peak_L.Size = new System.Drawing.Size(148, 10);
             this.peak_L.Step = 5;
             this.peak_L.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.peak_L.TabIndex = 32;
@@ -304,7 +304,6 @@ namespace AudioLogger.Application
             // timer1
             // 
             this.timer1.Enabled = true;
-            this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // tb_fileUploadDir
@@ -526,7 +525,7 @@ namespace AudioLogger.Application
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(553, 253);
+            this.ClientSize = new System.Drawing.Size(553, 257);
             this.Controls.Add(this.txt_version);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.bt_minimyze);
