@@ -8,5 +8,8 @@
     <Setting Name="AudioFilenameFormat" Type="System.String" Scope="User">
       <Value Profile="(Default)">yyyyMMdd-HHmmss</Value>
     </Setting>
+    <Setting Name="LogFilename" Type="System.String" Scope="User">
+      <Value Profile="(Default)">log4netConfig.xml</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

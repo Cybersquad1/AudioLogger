@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<configuration>
+  <configSections>
+    <section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" requirePermission="false" />
+  </configSections>
+
+  <log4net>
+    <appender name="LogFileAppender" type="log4net.Appender.FileAppender">
+      <file value="AudioLogger.Application.Logs.log" />
+      <appendToFile value="true" />
+      <encoding value="utf-8" />
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%-4timestamp [%thread] %-5level %logger %ndc - %message%newline" />
+      </layout>
+    </appender>
+
+
+    <root>
+      <level value="INFO" />
+      <appender-ref ref="LogFileAppender" />
+    </root>
+  </log4net>
+</configuration>
