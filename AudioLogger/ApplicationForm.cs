@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using AudioLogger.Services;
@@ -153,7 +154,10 @@ namespace AudioLogger.Application
         {
             do
             {
-                _recorderService.StartRecording(DeviceId, _filepathWav, _filepathMp3);
+                var fullBasePathNoExt = GenerateFilenameFromCurrentDate();
+                var fullpathWav = fullBasePathNoExt + ".wav";
+                var fullpathMp3 = fullBasePathNoExt + ".mp3";
+                _recorderService.StartRecording(DeviceId, fullpathWav);
                 var now = DateTime.Now;
                 var fileLenghtrequested = Convert.ToInt32(_filelenght);
                 var endofSpan = roundup(now, TimeSpan.FromMinutes(fileLenghtrequested));
@@ -174,23 +178,29 @@ namespace AudioLogger.Application
                 }
 
                 _recorderService.StopRecording();
-                new Thread(AsyncConvertAndUpload);
+                var asyncConvert = new Thread(() => AsyncConvertAndUpload(fullpathWav, fullpathMp3));
+                asyncConvert.Start();
             } while (!inzinierius.CancellationPending);
 
             e.Cancel = true;
         }
 
-        private void AsyncConvertAndUpload()
+        private string GenerateFilenameFromCurrentDate()
         {
-            _converterService.AsyncConvert(_filepathWav + _recorderService.FilenameWav,
-                _filepathMp3 + _recorderService.FilenameMp3);
+            return String.Format("{0}\\{1}", _filepathWav,
+                DateTime.Now.ToString(Configuration.Default.AudioFilenameFormat));
+        }
+
+        private void AsyncConvertAndUpload(string fullpathWav, string fullpathMp3)
+        {
+            _converterService.AsyncConvert(fullpathWav, fullpathMp3);
             _converterService.Wait();
 
             // Retry cycle
             var retryCount = 3;
             for (var i = 0; i < retryCount; i++)
             {
-                if (_ftpClientService.TryUploadFile(_filepathMp3, _recorderService.FilenameMp3))
+                if (_ftpClientService.TryUploadFile(_filepathMp3, fullpathMp3.Split('\\').Last()))
                 {
                     break;
                 }

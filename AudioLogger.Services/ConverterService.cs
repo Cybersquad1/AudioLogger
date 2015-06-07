@@ -31,11 +31,13 @@ namespace AudioLogger.Services
             _fullpathmp3 = fillPathMp3;
             _fullpathwav = fullPathWav;
             _task = new Thread(Wav2Mp3);
+            _task.Start();
         }
 
         public void Wait()
         {
-            _task.Join();
+            if(_task.IsAlive)
+                _task.Join();
         }
 
         private void Wav2Mp3()
@@ -43,13 +45,14 @@ namespace AudioLogger.Services
             try
             {
                 Thread.Sleep(1000);
-                var wavefilesource = new MemoryStream(File.ReadAllBytes(_fullpathwav));
+                MemoryStream wavefilesource = new MemoryStream(File.ReadAllBytes(_fullpathwav));
                 wavefilesource.Seek(0, SeekOrigin.Begin);
                 using (var rdr = new WaveFileReader(wavefilesource))
                 using (var wtr = new LameMP3FileWriter(_fullpathmp3, rdr.WaveFormat, LAMEPreset.VBR_90))
                 {
                     rdr.CopyTo(wtr);
                 }
+
                 lock (ThreadLock)
                 {
                     TaskFinished = true;
