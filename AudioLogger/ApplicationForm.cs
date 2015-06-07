@@ -28,6 +28,8 @@ namespace AudioLogger.Application
         public WaveIn Device;
         public int DeviceId;
         public string DeviceName;
+        public int _mp3bitdepth;
+        public int _mp3samplerate;
 
         // These were used in the pre-merge Recorder, for now they're unused
         private string _uploadDirectory;
@@ -114,7 +116,16 @@ namespace AudioLogger.Application
 
         public void btn_stop_Click(object sender, EventArgs e)
         {
+            cb_soundcard.Enabled = true;
+            btn_stop.Enabled = false;
+            btn_start.Enabled = true;
+            cb_lenght.Enabled = true;
+            cb_temp_path.Enabled = true;
+            cb_uploadType.Enabled = true;
+            tb_fileUploadDir.Enabled = true;
+
             inzinierius.CancelAsync();
+
         }
 
         private DateTime roundup(DateTime dt, TimeSpan d)
@@ -164,8 +175,7 @@ namespace AudioLogger.Application
 
         private void AsyncConvertAndUpload()
         {
-            _converterService.AsyncConvert(_filepathWav + _recorderService.FilenameWav,
-                _filepathMp3 + _recorderService.FilenameMp3);
+            _converterService.AsyncConvert(_filepathWav + _recorderService.FilenameWav, _filepathMp3 + _recorderService.FilenameMp3);
             _converterService.Wait();
 
             // Retry cycle
@@ -187,13 +197,7 @@ namespace AudioLogger.Application
 
         private void inzinierius_RunWorkCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            cb_soundcard.Enabled = true;
-            btn_stop.Enabled = false;
-            btn_start.Enabled = true;
-            cb_lenght.Enabled = true;
-            cb_temp_path.Enabled = true;
-            cb_uploadType.Enabled = true;
-            tb_fileUploadDir.Enabled = true;
+            // ? 
         }
 
         private void bt_Save_Click(object sender, EventArgs e)

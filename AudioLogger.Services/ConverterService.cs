@@ -46,7 +46,7 @@ namespace AudioLogger.Services
                 var wavefilesource = new MemoryStream(File.ReadAllBytes(_fullpathwav));
                 wavefilesource.Seek(0, SeekOrigin.Begin);
                 using (var rdr = new WaveFileReader(wavefilesource))
-                using (var wtr = new LameMP3FileWriter(_fullpathmp3, rdr.WaveFormat, LAMEPreset.VBR_90))
+                using (var wtr = new LameMP3FileWriter(_fullpathmp3, rdr.WaveFormat, LAMEPreset.ABR_128))
                 {
                     rdr.CopyTo(wtr);
                 }

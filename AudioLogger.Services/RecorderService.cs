@@ -16,11 +16,12 @@ namespace AudioLogger.Services
         public string Fullpathmp3 { get; set; }
         public string Fullpathwav { get; set; }
 
+
         public void StartRecording(int device, string pathWav, string pathMp3)
         {
             _waveSource = new WaveInEvent();
             _waveSource.DeviceNumber = device;
-            _waveSource.WaveFormat = new WaveFormat(44100, 16, 2);
+            _waveSource.WaveFormat = new WaveFormat(48000, 16, 2);
             _waveSource.DataAvailable += waveSource_DataAvailable;
             _waveSource.RecordingStopped += waveSource_RecordingStopped;
             var now = DateTime.Now.ToString("yyyyMMdd-HHmmss");
