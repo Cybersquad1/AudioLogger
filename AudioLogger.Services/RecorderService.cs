@@ -7,11 +7,14 @@ namespace AudioLogger.Services
     public class RecorderService : IRecorderService
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (RecorderService));
+        private readonly object _lock = new object();
+
         private WaveFileWriter _waveFile;
         private WaveInEvent _waveSource;
 
-        public void StartRecording(int device, string pathWav)
+        public void Setup(int device)
         {
+            _waveFile = null;
             _waveSource = new WaveInEvent
             {
                 DeviceNumber = device,
@@ -19,7 +22,23 @@ namespace AudioLogger.Services
             };
             _waveSource.DataAvailable += waveSource_DataAvailable;
             _waveSource.RecordingStopped += waveSource_RecordingStopped;
-            _waveFile = new WaveFileWriter(pathWav, _waveSource.WaveFormat);
+        }
+
+        public void WaveFile(string filename)
+        {
+            if (_waveSource == null) throw new ArgumentException("wave source not set up");
+            lock (_lock)
+            {
+                if (_waveFile != null)
+                {
+                    _waveFile.Dispose();
+                }
+                _waveFile = new WaveFileWriter(filename, _waveSource.WaveFormat);
+            }
+        }
+
+        public void StartRecording()
+        {
             try
             {
                 _waveSource.StartRecording();
@@ -27,7 +46,6 @@ namespace AudioLogger.Services
             catch (Exception e)
             {
                 Logger.Error(e.Message);
-                throw e;
             }
         }
 
@@ -38,19 +56,25 @@ namespace AudioLogger.Services
 
         private void waveSource_DataAvailable(object sender, WaveInEventArgs e)
         {
-            if (_waveFile != null)
+            lock (_lock)
             {
-                _waveFile.Write(e.Buffer, 0, e.BytesRecorded);
-                _waveFile.Flush();
+                if (_waveFile != null)
+                {
+                    _waveFile.Write(e.Buffer, 0, e.BytesRecorded);
+                    _waveFile.Flush();
+                }
             }
         }
 
         private void waveSource_RecordingStopped(object sender, StoppedEventArgs e)
         {
-            _waveSource.Dispose();
-            _waveSource = null;
-            _waveFile.Dispose();
-            _waveFile = null;
+            lock (_lock)
+            {
+                _waveSource.Dispose();
+                _waveSource = null;
+                _waveFile.Dispose();
+                _waveFile = null;
+            }
         }
     }
 }

@@ -48,10 +48,13 @@ namespace AudioLogger.Services
                 MemoryStream wavefilesource = new MemoryStream(File.ReadAllBytes(_fullpathwav));
                 wavefilesource.Seek(0, SeekOrigin.Begin);
                 using (var rdr = new WaveFileReader(wavefilesource))
-                using (var wtr = new LameMP3FileWriter(_fullpathmp3, rdr.WaveFormat, LAMEPreset.VBR_90))
                 {
-                    rdr.CopyTo(wtr);
+                    using (var wtr = new LameMP3FileWriter(_fullpathmp3, rdr.WaveFormat, LAMEPreset.VBR_90))
+                    {
+                        rdr.CopyTo(wtr);
+                    }
                 }
+                wavefilesource.Close();
 
                 lock (ThreadLock)
                 {
@@ -61,7 +64,6 @@ namespace AudioLogger.Services
             catch (Exception e)
             {
                 Logger.Error(e.Message);
-                throw e;
             }
         }
     }

@@ -119,12 +119,14 @@ namespace AudioLogger.Application
 
         private void inzinierius_DoWork(object sender, DoWorkEventArgs e)
         {
+            _recorderService.Setup(DeviceId);
+            _recorderService.StartRecording();
             do
             {
                 var fullBasePathNoExt = GenerateFilenameFromCurrentDate();
                 var fullpathWav = fullBasePathNoExt + ".wav";
                 var fullpathMp3 = fullBasePathNoExt + ".mp3";
-                _recorderService.StartRecording(DeviceId, fullpathWav);
+                _recorderService.WaveFile(fullpathWav);
                 var now = DateTime.Now;
                 var fileLenghtrequested = Convert.ToInt32(_filelenght);
                 var endofSpan = roundup(now, TimeSpan.FromMinutes(fileLenghtrequested));
@@ -144,11 +146,10 @@ namespace AudioLogger.Application
                     }
                 }
 
-                _recorderService.StopRecording();
                 var asyncConvert = new Thread(() => AsyncConvertAndUpload(fullpathWav, fullpathMp3));
                 asyncConvert.Start();
             } while (!inzinierius.CancellationPending);
-
+            _recorderService.StopRecording();
             e.Cancel = true;
         }
 
@@ -160,8 +161,17 @@ namespace AudioLogger.Application
 
         private void AsyncConvertAndUpload(string fullpathWav, string fullpathMp3)
         {
-            _converterService.AsyncConvert(fullpathWav, fullpathMp3);
-            _converterService.Wait();
+            Thread.Sleep(1000);
+            try
+            {
+                _converterService.AsyncConvert(fullpathWav, fullpathMp3);
+                _converterService.Wait();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+                MessageBox.Show(ex.Message);
+            }
 
             // Retry cycle
             var retryCount = 3;

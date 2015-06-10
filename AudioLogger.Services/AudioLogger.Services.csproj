@@ -72,10 +72,10 @@
   <ItemGroup>
     <Content Include="log4net\log4net.dll" />
     <Content Include="log4net\log4net.xml" />
-    <Content Include="mp3lame\libmp3lame.32.dll">
+    <Content Include="libmp3lame.32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="mp3lame\libmp3lame.64.dll">
+    <Content Include="libmp3lame.64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
