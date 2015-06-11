@@ -39,10 +39,10 @@ namespace AudioLogger.Services
                     destination),
                     "STOR", source);
             }
-            catch (WebException e)
+            catch (Exception exception)
             {
-                Logger.Error(e.Message);
-                throw e;
+                Logger.Warn(exception.Message);
+                return false;
             }
             return true;
         }

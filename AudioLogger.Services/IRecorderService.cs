@@ -2,11 +2,9 @@
 {
     public interface IRecorderService
     {
-        string FilenameWav { get; set; }
-        string FilenameMp3 { get; set; }
-        string Fullpathmp3 { get; set; }
-        string Fullpathwav { get; set; }
-        void StartRecording(int device, string pathWav, string pathMp3);
+        void Setup(int device);
+        void WaveFile(string filename);
+        void StartRecording();
         void StopRecording();
     }
 }

@@ -1,9 +1,15 @@
 <?xml version='1.0' encoding='windows-1257'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AudioLogger" GeneratedClassName="Configuration">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AudioLogger.Application" GeneratedClassName="Configuration">
   <Profiles />
   <Settings>
     <Setting Name="IniFilename" Type="System.String" Scope="Application">
       <Value Profile="(Default)">\config.ini</Value>
+    </Setting>
+    <Setting Name="AudioFilenameFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">yyyyMMdd-HHmmss</Value>
+    </Setting>
+    <Setting Name="LogFilename" Type="System.String" Scope="User">
+      <Value Profile="(Default)">log4netConfig.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>

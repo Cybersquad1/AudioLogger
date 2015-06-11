@@ -20,7 +20,7 @@ namespace AudioLogger.Application
                 _container.RegisterType<IFtpClientService, FtpClientService>(
                     new ContainerControlledLifetimeManager(),
                     new InjectionConstructor(new IniFile(Configuration.Default.IniFilename)));
-                _container.RegisterType<IRecorderService, RecorderService>(new ContainerControlledLifetimeManager());
+                _container.RegisterType<IRecorderService, RecorderService>(new TransientLifetimeManager());
                 _container.RegisterType<IConverterService, ConverterService>(new ContainerControlledLifetimeManager());
             }
             catch (Exception e)

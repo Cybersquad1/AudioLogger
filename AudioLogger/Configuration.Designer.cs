@@ -31,5 +31,29 @@ namespace AudioLogger.Application {
                 return ((string)(this["IniFilename"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("yyyyMMdd-HHmmss")]
+        public string AudioFilenameFormat {
+            get {
+                return ((string)(this["AudioFilenameFormat"]));
+            }
+            set {
+                this["AudioFilenameFormat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("log4netConfig.xml")]
+        public string LogFilename {
+            get {
+                return ((string)(this["LogFilename"]));
+            }
+            set {
+                this["LogFilename"] = value;
+            }
+        }
     }
 }
