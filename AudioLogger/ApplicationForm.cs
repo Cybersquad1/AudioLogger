@@ -1,13 +1,17 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using AudioLogger.Services;
+using NAudio.CoreAudioApi;
 using Ini;
 using log4net;
 using NAudio.Wave;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
+
+
 
 namespace AudioLogger.Application
 {
@@ -15,7 +19,7 @@ namespace AudioLogger.Application
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (ApplicationForm));
         private readonly IniFile _config = new IniFile(Directory.GetCurrentDirectory() + "/config.ini");
-
+        
         private string _filelenght;
         private string _filepathMp3;
         private string _filepathWav;
@@ -23,6 +27,9 @@ namespace AudioLogger.Application
         private int _progressTotal;
         public WaveIn Device;
         public int DeviceId;
+        public string DeviceName;
+        public int _mp3bitdepth;
+        public int _mp3samplerate;
 
         // These were used in the pre-merge Recorder, for now they're unused
         private string _uploadDirectory;
@@ -51,7 +58,7 @@ namespace AudioLogger.Application
             {
                 var deviceInfo = WaveIn.GetCapabilities(waveInDevice);
                 var item = new ComboboxItem();
-                item.Text = deviceInfo.ProductName + " [" + deviceInfo.Channels + "]";
+                item.Text = deviceInfo.ProductName;
                 item.Value = waveInDevice;
                 cb_soundcard.Items.Add(item);
             }
@@ -67,12 +74,11 @@ namespace AudioLogger.Application
             cb_uploadType.Text = _config.IniReadValue("upload", "type");
             tb_fileUploadDir.Text = _config.IniReadValue("directory", "path");
         }
-
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
             if (m.Msg == WM_NCHITTEST)
-                m.Result = (IntPtr) (HT_CAPTION);
+                m.Result = (IntPtr)(HT_CAPTION);
         }
 
         private const int WM_NCHITTEST = 0x84;
@@ -84,6 +90,7 @@ namespace AudioLogger.Application
         {
             var selectedDevice = (ComboboxItem) cb_soundcard.SelectedItem;
             DeviceId = Convert.ToInt32(selectedDevice.Value);
+            DeviceName = selectedDevice.Text;
         }
 
         public void btn_start_Click(object sender, EventArgs e)
@@ -109,7 +116,16 @@ namespace AudioLogger.Application
 
         public void btn_stop_Click(object sender, EventArgs e)
         {
+            cb_soundcard.Enabled = true;
+            btn_stop.Enabled = false;
+            btn_start.Enabled = true;
+            cb_lenght.Enabled = true;
+            cb_temp_path.Enabled = true;
+            cb_uploadType.Enabled = true;
+            tb_fileUploadDir.Enabled = true;
+
             inzinierius.CancelAsync();
+
         }
 
         private DateTime roundup(DateTime dt, TimeSpan d)
@@ -119,14 +135,18 @@ namespace AudioLogger.Application
 
         private void inzinierius_DoWork(object sender, DoWorkEventArgs e)
         {
-            _recorderService.Setup(DeviceId);
-            _recorderService.StartRecording();
             do
             {
-                var fullBasePathNoExt = GenerateFilenameFromCurrentDate();
-                var fullpathWav = fullBasePathNoExt + ".wav";
-                var fullpathMp3 = fullBasePathNoExt + ".mp3";
-                _recorderService.WaveFile(fullpathWav);
+                try
+                {
+                    _recorderService.StartRecording(DeviceId, _filepathWav, _filepathMp3);
+                }
+                catch(Exception ex)
+                {
+                    Logger.Error(ex.Message);
+                    throw ex;
+                }
+                
                 var now = DateTime.Now;
                 var fileLenghtrequested = Convert.ToInt32(_filelenght);
                 var endofSpan = roundup(now, TimeSpan.FromMinutes(fileLenghtrequested));
@@ -146,38 +166,23 @@ namespace AudioLogger.Application
                     }
                 }
 
-                var asyncConvert = new Thread(() => AsyncConvertAndUpload(fullpathWav, fullpathMp3));
-                asyncConvert.Start();
+                _recorderService.StopRecording();
+                new Thread(AsyncConvertAndUpload);
             } while (!inzinierius.CancellationPending);
-            _recorderService.StopRecording();
+
             e.Cancel = true;
         }
 
-        private string GenerateFilenameFromCurrentDate()
+        private void AsyncConvertAndUpload()
         {
-            return String.Format("{0}\\{1}", _filepathWav,
-                DateTime.Now.ToString(Configuration.Default.AudioFilenameFormat));
-        }
-
-        private void AsyncConvertAndUpload(string fullpathWav, string fullpathMp3)
-        {
-            Thread.Sleep(1000);
-            try
-            {
-                _converterService.AsyncConvert(fullpathWav, fullpathMp3);
-                _converterService.Wait();
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-            }
+            _converterService.AsyncConvert(_filepathWav + _recorderService.FilenameWav, _filepathMp3 + _recorderService.FilenameMp3);
+            _converterService.Wait();
 
             // Retry cycle
             var retryCount = 3;
             for (var i = 0; i < retryCount; i++)
             {
-                if (_ftpClientService.TryUploadFile(_filepathMp3, fullpathMp3.Split('\\').Last()))
+                if (_ftpClientService.TryUploadFile(_filepathMp3, _recorderService.FilenameMp3))
                 {
                     break;
                 }
@@ -192,13 +197,7 @@ namespace AudioLogger.Application
 
         private void inzinierius_RunWorkCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            cb_soundcard.Enabled = true;
-            btn_stop.Enabled = false;
-            btn_start.Enabled = true;
-            cb_lenght.Enabled = true;
-            cb_temp_path.Enabled = true;
-            cb_uploadType.Enabled = true;
-            tb_fileUploadDir.Enabled = true;
+            // ? 
         }
 
         private void bt_Save_Click(object sender, EventArgs e)
@@ -221,6 +220,19 @@ namespace AudioLogger.Application
             progressBar1.Maximum = _progressTotal;
             progressBar1.Value = _progress;
             progressBar1.Refresh();
+
+            MMDeviceEnumerator de = new MMDeviceEnumerator();
+            
+            var device = (MMDevice)de.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia); //<-- veikia Default input device
+
+            //var device = (MMDevice)de.GetDevice(DeviceName); // <-- niaveikia, crashina, jei nori pasirinkt device is comboBoxo
+            // greiciausiai nes neatitinka DeviceName gautas is WaveIn ir MMDevice ID.
+
+            peak_L.Value = (int)(device.AudioMeterInformation.MasterPeakValue * 50 + 0.25);
+            peak_R.Value = (int)(device.AudioMeterInformation.MasterPeakValue * 50 + 0.25);
+            peak_L.Refresh();
+            peak_R.Refresh();
+            
         }
 
         public class ComboboxItem
@@ -257,5 +269,6 @@ namespace AudioLogger.Application
         {
             this.Show();
         }
+
     }
 }
