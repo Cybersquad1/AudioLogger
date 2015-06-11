@@ -18,7 +18,7 @@ namespace AudioLogger.Services
             _waveSource = new WaveInEvent
             {
                 DeviceNumber = device,
-                WaveFormat = new WaveFormat(44100, 16, 2)
+                WaveFormat = new WaveFormat(48000, 16, 2)
             };
             _waveSource.DataAvailable += waveSource_DataAvailable;
             _waveSource.RecordingStopped += waveSource_RecordingStopped;
