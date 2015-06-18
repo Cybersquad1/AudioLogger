@@ -35,8 +35,6 @@ namespace AudioLogger.Application
 			this.btn_stop = new System.Windows.Forms.Button();
 			this.btn_start = new System.Windows.Forms.Button();
 			this.inzinierius = new System.ComponentModel.BackgroundWorker();
-			this.cb_lenght = new System.Windows.Forms.ComboBox();
-			this.cb_temp_path = new System.Windows.Forms.ComboBox();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.peak_R = new System.Windows.Forms.ProgressBar();
 			this.peak_L = new System.Windows.Forms.ProgressBar();
@@ -57,6 +55,8 @@ namespace AudioLogger.Application
 			this.cb_uploadType = new System.Windows.Forms.ComboBox();
 			this.settings = new System.Windows.Forms.TabControl();
 			this.tab1 = new System.Windows.Forms.TabPage();
+			this.tb_tempDir = new System.Windows.Forms.TextBox();
+			this.bt_browseTemp = new System.Windows.Forms.Button();
 			this.label8 = new System.Windows.Forms.Label();
 			this.tab2 = new System.Windows.Forms.TabPage();
 			this.tab3 = new System.Windows.Forms.TabPage();
@@ -68,6 +68,8 @@ namespace AudioLogger.Application
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.txt_version = new System.Windows.Forms.Label();
+			this.dx_browseTemp = new System.Windows.Forms.FolderBrowserDialog();
+			this.tb_length = new System.Windows.Forms.TextBox();
 			this.groupBox1.SuspendLayout();
 			this.settings.SuspendLayout();
 			this.tab1.SuspendLayout();
@@ -120,32 +122,6 @@ namespace AudioLogger.Application
 			this.inzinierius.WorkerSupportsCancellation = true;
 			this.inzinierius.DoWork += new System.ComponentModel.DoWorkEventHandler(this.inzinierius_DoWork);
 			this.inzinierius.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.inzinierius_RunWorkCompleted);
-			// 
-			// cb_lenght
-			// 
-			this.cb_lenght.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.cb_lenght.FormattingEnabled = true;
-			this.cb_lenght.Items.AddRange(new object[] {
-            "15",
-            "30",
-            "60"});
-			this.cb_lenght.Location = new System.Drawing.Point(100, 38);
-			this.cb_lenght.Name = "cb_lenght";
-			this.cb_lenght.Size = new System.Drawing.Size(315, 21);
-			this.cb_lenght.TabIndex = 12;
-			// 
-			// cb_temp_path
-			// 
-			this.cb_temp_path.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.cb_temp_path.FormattingEnabled = true;
-			this.cb_temp_path.Items.AddRange(new object[] {
-            "E:\\_AudioLogger",
-            "C:",
-            "D:"});
-			this.cb_temp_path.Location = new System.Drawing.Point(100, 11);
-			this.cb_temp_path.Name = "cb_temp_path";
-			this.cb_temp_path.Size = new System.Drawing.Size(315, 21);
-			this.cb_temp_path.TabIndex = 13;
 			// 
 			// groupBox1
 			// 
@@ -336,19 +312,41 @@ namespace AudioLogger.Application
 			// 
 			// tab1
 			// 
-			this.tab1.BackColor = System.Drawing.Color.Gainsboro;
-			this.tab1.Controls.Add(this.cb_temp_path);
+			this.tab1.BackColor = System.Drawing.Color.Transparent;
+			this.tab1.Controls.Add(this.tb_length);
+			this.tab1.Controls.Add(this.tb_tempDir);
+			this.tab1.Controls.Add(this.bt_browseTemp);
 			this.tab1.Controls.Add(this.label8);
 			this.tab1.Controls.Add(this.label1);
 			this.tab1.Controls.Add(this.cb_uploadType);
 			this.tab1.Controls.Add(this.label3);
-			this.tab1.Controls.Add(this.cb_lenght);
 			this.tab1.Location = new System.Drawing.Point(4, 22);
 			this.tab1.Name = "tab1";
 			this.tab1.Padding = new System.Windows.Forms.Padding(3);
 			this.tab1.Size = new System.Drawing.Size(421, 120);
 			this.tab1.TabIndex = 2;
 			this.tab1.Text = "General";
+			// 
+			// tb_tempDir
+			// 
+			this.tb_tempDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.tb_tempDir.ForeColor = System.Drawing.SystemColors.MenuText;
+			this.tb_tempDir.Location = new System.Drawing.Point(103, 11);
+			this.tb_tempDir.Name = "tb_tempDir";
+			this.tb_tempDir.Size = new System.Drawing.Size(231, 20);
+			this.tb_tempDir.TabIndex = 30;
+			this.tb_tempDir.Text = "Select directoy for temp files";
+			// 
+			// bt_browseTemp
+			// 
+			this.bt_browseTemp.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.bt_browseTemp.Location = new System.Drawing.Point(340, 11);
+			this.bt_browseTemp.Name = "bt_browseTemp";
+			this.bt_browseTemp.Size = new System.Drawing.Size(75, 21);
+			this.bt_browseTemp.TabIndex = 29;
+			this.bt_browseTemp.Text = "Browse";
+			this.bt_browseTemp.UseVisualStyleBackColor = true;
+			this.bt_browseTemp.Click += new System.EventHandler(this.bt_browseTemp_Click);
 			// 
 			// label8
 			// 
@@ -460,11 +458,22 @@ namespace AudioLogger.Application
 			this.txt_version.TabIndex = 33;
 			this.txt_version.Text = "AudioLogger v1.2";
 			// 
+			// tb_length
+			// 
+			this.tb_length.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.tb_length.ForeColor = System.Drawing.SystemColors.MenuText;
+			this.tb_length.Location = new System.Drawing.Point(103, 39);
+			this.tb_length.Name = "tb_length";
+			this.tb_length.Size = new System.Drawing.Size(231, 20);
+			this.tb_length.TabIndex = 31;
+			this.tb_length.Text = "60";
+			this.tb_length.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
 			// ApplicationForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.BackColor = System.Drawing.Color.Gainsboro;
+			this.BackColor = System.Drawing.SystemColors.ActiveBorder;
 			this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
 			this.ClientSize = new System.Drawing.Size(553, 257);
 			this.Controls.Add(this.txt_version);
@@ -505,9 +514,7 @@ namespace AudioLogger.Application
         private System.Windows.Forms.Button btn_stop;
         private System.Windows.Forms.Button btn_start;
         private System.ComponentModel.BackgroundWorker inzinierius;
-        public System.Windows.Forms.ComboBox cb_soundcard;
-        public System.Windows.Forms.ComboBox cb_lenght;
-        private System.Windows.Forms.ComboBox cb_temp_path;
+		public System.Windows.Forms.ComboBox cb_soundcard;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
@@ -539,6 +546,10 @@ namespace AudioLogger.Application
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label txt_version;
+		private System.Windows.Forms.Button bt_browseTemp;
+		private System.Windows.Forms.FolderBrowserDialog dx_browseTemp;
+		private System.Windows.Forms.TextBox tb_tempDir;
+		private System.Windows.Forms.TextBox tb_length;
     }
 }
 
