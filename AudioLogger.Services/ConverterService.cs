@@ -22,13 +22,13 @@ namespace AudioLogger.Services
 
         private bool TaskFinished { get; set; }
 
-        public void AsyncConvert(string fullPathWav, string fillPathMp3)
+        public void AsyncConvert(string fullPathWav, string fullPathMp3)
         {
             lock (ThreadLock)
             {
                 TaskFinished = false;
             }
-            _fullpathmp3 = fillPathMp3;
+            _fullpathmp3 = fullPathMp3;
             _fullpathwav = fullPathWav;
             _task = new Thread(Wav2Mp3);
             _task.Start();
