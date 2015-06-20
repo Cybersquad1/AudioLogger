@@ -139,7 +139,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="AudioLogger.Application_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Configuration.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
