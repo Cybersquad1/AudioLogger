@@ -2,9 +2,9 @@
 
 namespace AudioLogger.Services
 {
-    public interface IFtpClientService
+    public interface IWinDirectoryService
     {
-        void Setup(string host, string targetDir, string username, string password);
+        void Setup(string directory);
         bool TryUploadFile(string source);
         int RemoveFilesOlderThan(DateTime date);
     }

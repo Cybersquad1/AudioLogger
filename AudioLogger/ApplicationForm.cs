@@ -8,9 +8,8 @@ using NAudio.CoreAudioApi;
 using Ini;
 using log4net;
 using NAudio.Wave;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
 using System.Linq;
+using Microsoft.Practices.ObjectBuilder2;
 
 
 namespace AudioLogger.Application
@@ -26,28 +25,31 @@ namespace AudioLogger.Application
         private int _progress;
         private int _progressTotal;
         public WaveIn Device;
-        public int DeviceId;
+        private int _deviceId;
         public string DeviceName;
-        public int _mp3bitdepth;
-        public int _mp3samplerate;
-
-        // These were used in the pre-merge Recorder, for now they're unused
+        private int _mp3Bitdepth;
+        private int _mp3Samplerate;
+        private string _temporaryPath;
         private string _uploadDirectory;
         private string _uploadType;
 
         private readonly IConverterService _converterService;
         private readonly IFtpClientService _ftpClientService;
+        private readonly IWinDirectoryService _winDirectoryService;
         private readonly IRecorderService _recorderService;
 
         public ApplicationForm(IFtpClientService ftpClientService,
+            IWinDirectoryService winDirectoryService,
             IRecorderService recorderService,
             IConverterService converterService)
         {
             if (ftpClientService == null) throw new ArgumentException("ftpClientService");
+            if (winDirectoryService == null) throw new ArgumentException("winDirectoryService");
             if (recorderService == null) throw new ArgumentException("recorderService");
             if (converterService == null) throw new ArgumentException("converterService");
 
             _ftpClientService = ftpClientService;
+            _winDirectoryService = winDirectoryService;
             _recorderService = recorderService;
             _converterService = converterService;
 
@@ -90,7 +92,7 @@ namespace AudioLogger.Application
         public void set_device(object sender, EventArgs e)
         {
             var selectedDevice = (ComboboxItem) cb_soundcard.SelectedItem;
-            DeviceId = Convert.ToInt32(selectedDevice.Value);
+            _deviceId = Convert.ToInt32(selectedDevice.Value);
             DeviceName = selectedDevice.Text;
         }
 
@@ -111,6 +113,8 @@ namespace AudioLogger.Application
             Invoke(new MethodInvoker(delegate { _progress = progressBar1.Value; }));
             Invoke(new MethodInvoker(delegate { _uploadType = cb_uploadType.Text; }));
             Invoke(new MethodInvoker(delegate { _uploadDirectory = tb_fileUploadDir.Text; }));
+            Invoke(new MethodInvoker(delegate { _uploadType = cb_uploadType.Text; }));
+            Invoke(new MethodInvoker(delegate { _temporaryPath = cb_temp_path.Text; }));
 
             inzinierius.RunWorkerAsync();
         }
@@ -135,7 +139,7 @@ namespace AudioLogger.Application
 
         private void inzinierius_DoWork(object sender, DoWorkEventArgs e)
         {
-            _recorderService.Setup(DeviceId);
+            _recorderService.Setup(_deviceId);
             _recorderService.StartRecording();
             do
             {
@@ -189,21 +193,57 @@ namespace AudioLogger.Application
                 MessageBox.Show(ex.Message);
             }
 
+            if (string.Equals(_uploadType, "FTP")) FtpUpload(fullpathMp3);
+            if (string.Equals(_uploadType, "Windows directory")) WinDirUpload(fullpathMp3);
+
+            File.Delete(fullpathWav);
+            File.Delete(fullpathMp3);
+        }
+
+        void WinDirUpload(string fullpathMp3)
+        {
+            _winDirectoryService.Setup(tb_fileUploadDir.Text);
+
             // Retry cycle
             var retryCount = 3;
             for (var i = 0; i < retryCount; i++)
             {
-                if (_ftpClientService.TryUploadFile(_filepathMp3, fullpathMp3.Split('\\').Last()))
+                if (_winDirectoryService.TryUploadFile(fullpathMp3))
                 {
                     break;
                 }
-                Logger.Warn(string.Format("Attempt {0} failed", i + 1));
-                if (i < retryCount)
+                Logger.Error(string.Format("Upload attempt {0} failed", i + 1));
+                if (i >= retryCount)
                 {
                     Logger.Error("Failed to upload file");
                 }
                 Thread.Sleep(2000);
             }
+
+            _winDirectoryService.RemoveFilesOlderThan(new DateTime(DateTime.Now.Ticks - 60000));
+        }
+
+        void FtpUpload(string fullpathMp3)
+        {
+            _ftpClientService.Setup(tb_hostname.Text, tb_directory.Text, tb_username.Text, tb_password.Text);
+
+            // Retry cycle
+            var retryCount = 3;
+            for (var i = 0; i < retryCount; i++)
+            {
+                if (_ftpClientService.TryUploadFile(fullpathMp3))
+                {
+                    break;
+                }
+                Logger.Error(string.Format("Upload attempt {0} failed", i + 1));
+                if (i >= retryCount)
+                {
+                    Logger.Error("Failed to upload file");
+                }
+                Thread.Sleep(2000);
+            }
+
+            _ftpClientService.RemoveFilesOlderThan(new DateTime(DateTime.Now.Ticks - 60000));
         }
 
 
