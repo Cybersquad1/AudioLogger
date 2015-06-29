@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using log4net;
@@ -9,8 +10,9 @@ namespace AudioLogger.Services
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (WinDirectoryService));
         private string _destinationDirectory;
+        private string _format;
 
-        public void Setup(string directory)
+        public void Setup(string directory, string format)
         {
             _destinationDirectory = directory;
         }
@@ -41,7 +43,7 @@ namespace AudioLogger.Services
             foreach (var file in allFiles)
             {
                 DateTime fileTime;
-                if (!DateTime.TryParse(file.Name, out fileTime))
+                if (!DateTime.TryParseExact(file.Name, _format, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out fileTime))
                 {
                     Logger.Warn(string.Format("Malformed file name {0}", file.FullName));
                     continue;

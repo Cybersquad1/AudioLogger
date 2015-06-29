@@ -202,7 +202,7 @@ namespace AudioLogger.Application
 
         void WinDirUpload(string fullpathMp3)
         {
-            _winDirectoryService.Setup(tb_fileUploadDir.Text);
+            _winDirectoryService.Setup(tb_fileUploadDir.Text, Configuration.Default.AudioFilenameFormat);
 
             // Retry cycle
             var retryCount = 3;
@@ -225,7 +225,7 @@ namespace AudioLogger.Application
 
         void FtpUpload(string fullpathMp3)
         {
-            _ftpClientService.Setup(tb_hostname.Text, tb_directory.Text, tb_username.Text, tb_password.Text);
+            _ftpClientService.Setup(tb_hostname.Text, tb_directory.Text, tb_username.Text, tb_password.Text, Configuration.Default.AudioFilenameFormat);
 
             // Retry cycle
             var retryCount = 3;
