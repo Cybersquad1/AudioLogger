@@ -220,7 +220,7 @@ namespace AudioLogger.Application
                 Thread.Sleep(2000);
             }
 
-            _winDirectoryService.RemoveFilesOlderThan(new DateTime(DateTime.Now.Ticks - 60000));
+            _winDirectoryService.RemoveFilesOlderThan(new DateTime(DateTime.Now.Ticks - 600000));
         }
 
         void FtpUpload(string fullpathMp3)
@@ -243,7 +243,7 @@ namespace AudioLogger.Application
                 Thread.Sleep(2000);
             }
 
-            _ftpClientService.RemoveFilesOlderThan(new DateTime(DateTime.Now.Ticks - 60000));
+            _ftpClientService.RemoveFilesOlderThan(new DateTime(DateTime.Now.Ticks - 600000));
         }
 
 
