@@ -79,7 +79,7 @@ namespace AudioLogger.Services
                                     Logger.Warn(string.Format("Malformed file name {0}", file));
                                     continue;
                                 }
-                                if (fileTime.CompareTo(date) < 0)
+                                if (fileTime.CompareTo(date) > 0)
                                 {
                                     var deleteRequest =
                                         WebRequest.Create(string.Format("ftp://{0}/{1}", _host, line)) as FtpWebRequest;
