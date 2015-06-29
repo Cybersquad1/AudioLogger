@@ -20,10 +20,9 @@ namespace AudioLogger.Services
             try
             {
                 var fullpath = string.Format("{0}\\{1}", _destinationDirectory, source.Split('\\').Last());
-                using (var sw = new StreamWriter(fullpath))
-                {
-                    sw.Write(File.ReadAllBytes(source));
-                }
+                var complete = File.ReadAllBytes(source);
+                File.WriteAllBytes(fullpath, complete);
+                    
             }
             catch (Exception e)
             {
@@ -35,6 +34,7 @@ namespace AudioLogger.Services
 
         public int RemoveFilesOlderThan(DateTime date)
         {
+            if (_destinationDirectory == null) return 0;
             var numberOfFilesRemoved = 0;
             var dirInfo = new DirectoryInfo(_destinationDirectory);
             var allFiles = dirInfo.GetFiles("*.mp3", SearchOption.AllDirectories);
