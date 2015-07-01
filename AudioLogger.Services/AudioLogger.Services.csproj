@@ -61,15 +61,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConverterService.cs" />
-    <Compile Include="FtpClientService.cs" />
+    <Compile Include="FtpUploadService.cs" />
     <Compile Include="IConverterService.cs" />
-    <Compile Include="IFtpClientService.cs" />
     <Compile Include="INI.cs" />
     <Compile Include="IRecorderService.cs" />
-    <Compile Include="IWinDirectoryService.cs" />
+    <Compile Include="IUploadService.cs" />
+    <Compile Include="Parameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecorderService.cs" />
-    <Compile Include="WinDirectoryService.cs" />
+    <Compile Include="WindowsDirectoryUploadService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="log4net\log4net.dll" />

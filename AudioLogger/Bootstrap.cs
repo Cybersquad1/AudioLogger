@@ -17,11 +17,8 @@ namespace AudioLogger.Application
             {
                 _container = new UnityContainer();
                 _container.RegisterType<ApplicationForm>();
-                _container.RegisterType<IFtpClientService, FtpClientService>(new ContainerControlledLifetimeManager());
                 _container.RegisterType<IRecorderService, RecorderService>(new TransientLifetimeManager());
                 _container.RegisterType<IConverterService, ConverterService>(new ContainerControlledLifetimeManager());
-                _container.RegisterType<IWinDirectoryService, WinDirectoryService>(
-                    new ContainerControlledLifetimeManager());
             }
             catch (Exception e)
             {

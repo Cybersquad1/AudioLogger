@@ -7,23 +7,23 @@ using log4net;
 
 namespace AudioLogger.Services
 {
-    public class FtpClientService : IFtpClientService
+    public class FtpUploadService : IUploadService
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof (FtpClientService));
+        private static readonly ILog Logger = LogManager.GetLogger(typeof (FtpUploadService));
         private WebClient _client;
-        private string _host;
-        private string _password;
-        private string _targetDirectory;
-        private string _username;
-        private string _format;
+        private readonly string _host;
+        private readonly string _password;
+        private readonly string _targetDirectory;
+        private readonly string _username;
+        private readonly string _format;
 
-        public void Setup(string host, string targetDir, string username, string password, string format)
+        public FtpUploadService(Parameters parameters)
         {
-            _host = host;
-            _targetDirectory = targetDir;
-            _username = username;
-            _password = password;
-            _format = format;
+            _host = parameters.FtpHost;
+            _targetDirectory = parameters.FtpTargetDirectory;
+            _username = parameters.FtpUsername;
+            _password = parameters.FtpPassword;
+            _format = parameters.FileNameFromDateFormat;
         }
 
         public bool TryUploadFile(string source)

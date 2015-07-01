@@ -6,15 +6,16 @@ using log4net;
 
 namespace AudioLogger.Services
 {
-    public class WinDirectoryService : IWinDirectoryService
+    public class WindowsDirectoryUploadService : IUploadService
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof (WinDirectoryService));
-        private string _destinationDirectory;
-        private string _format;
+        private static readonly ILog Logger = LogManager.GetLogger(typeof (WindowsDirectoryUploadService));
+        private readonly string _destinationDirectory;
+        private readonly string _format;
 
-        public void Setup(string directory, string format)
+        public WindowsDirectoryUploadService(Parameters parameters)
         {
-            _destinationDirectory = directory;
+            _destinationDirectory = parameters.WindowsDirectoryUploadTarget;
+            _format = parameters.FileNameFromDateFormat;
         }
 
         public bool TryUploadFile(string source)
