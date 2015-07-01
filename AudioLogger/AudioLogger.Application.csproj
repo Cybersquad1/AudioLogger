@@ -160,7 +160,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="IntelliTrace.ico" />
-    <Content Include="log4net\log4net.dll" />
+    <Content Include="log4netConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="log4net\log4net.dll" />
     <Content Include="log4net\log4net.xml" />
   </ItemGroup>
   <ItemGroup>

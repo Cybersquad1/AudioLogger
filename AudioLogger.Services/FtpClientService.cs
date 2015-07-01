@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
-using Ini;
 using log4net;
 
 namespace AudioLogger.Services
@@ -9,34 +10,36 @@ namespace AudioLogger.Services
     public class FtpClientService : IFtpClientService
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (FtpClientService));
-        private readonly WebClient _client;
+        private WebClient _client;
+        private string _host;
+        private string _password;
+        private string _targetDirectory;
+        private string _username;
+        private string _format;
 
-        public FtpClientService(IniFile iniFile)
+        public void Setup(string host, string targetDir, string username, string password, string format)
         {
-            if (iniFile == null) throw new ArgumentException("iniFile");
-
-            Host = iniFile.IniReadValue("ftp", "host");
-            TargetDirectory = iniFile.IniReadValue("ftp", "targetDir");
-            Username = iniFile.IniReadValue("ftp", "user");
-            Password = iniFile.IniReadValue("ftp", "pass");
-            _client = new WebClient();
+            _host = host;
+            _targetDirectory = targetDir;
+            _username = username;
+            _password = password;
+            _format = format;
         }
 
-        private string Host { get; set; }
-        private string TargetDirectory { get; set; }
-        private string Username { get; set; }
-        private string Password { get; set; }
-
-        public bool TryUploadFile(string source, string destination)
+        public bool TryUploadFile(string source)
         {
-            _client.Credentials = new NetworkCredential(Username, Password);
+            _client = new WebClient
+            {
+                Credentials = new NetworkCredential(_username, _password),
+                Proxy = null
+            };
             try
             {
-                _client.Proxy = null;
-                _client.UploadFile(string.Format("ftp://{0}/{1}{2}",
-                    Host,
-                    TargetDirectory,
-                    destination),
+                var address = string.Format("ftp://{0}/{1}/{2}",
+                    _host,
+                    _targetDirectory,
+                    source.Split('\\').Last());
+                _client.UploadFile(address,
                     "STOR", source);
             }
             catch (Exception exception)
@@ -49,10 +52,10 @@ namespace AudioLogger.Services
 
         public int RemoveFilesOlderThan(DateTime date)
         {
-            var webRequest = WebRequest.Create(string.Format("ftp://{0}/{1}", Host, TargetDirectory)) as FtpWebRequest;
+            var webRequest = WebRequest.Create(string.Format("ftp://{0}/{1}", _host, _targetDirectory)) as FtpWebRequest;
             if (webRequest == null) throw new WebException("Failed to create a web request");
-            webRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-            webRequest.Credentials = new NetworkCredential(Username, Password);
+            webRequest.Method = WebRequestMethods.Ftp.ListDirectory;
+            webRequest.Credentials = new NetworkCredential(_username, _password);
 
             var count = 0;
             var webResponse = webRequest.GetResponse() as FtpWebResponse;
@@ -64,14 +67,38 @@ namespace AudioLogger.Services
                     {
                         using (var streamReader = new StreamReader(stream))
                         {
-                            Logger.Info(streamReader.ReadToEnd());
-                            // This feature is still missing, it only logs what is going to be sent
+                            string line;
+                            while ((line = streamReader.ReadLine()) != null)
+                            {
+                                var fullFileName = line.Split('/').Last();
+                                var file = fullFileName.Split('.').First();
+
+                                DateTime fileTime;
+                                if (!DateTime.TryParseExact(file, _format, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out fileTime))
+                                {
+                                    Logger.Warn(string.Format("Malformed file name {0}", file));
+                                    continue;
+                                }
+                                if (fileTime.CompareTo(date) > 0)
+                                {
+                                    var deleteRequest =
+                                        WebRequest.Create(string.Format("ftp://{0}/{1}", _host, line)) as FtpWebRequest;
+                                    if (deleteRequest == null) throw new WebException("Failed to create a web request");
+                                    deleteRequest.Method = WebRequestMethods.Ftp.DeleteFile;
+                                    deleteRequest.Credentials = new NetworkCredential(_username, _password);
+                                    var deleteResponse = deleteRequest.GetResponse();
+
+                                    count++;
+                                    Logger.Info(string.Format("Removing file {0}", fullFileName));
+                                }
+                            }
                         }
                     }
-                    else throw new WebException("Failed to get the response stream");
+                    else throw new WebException("Failed to get the response stream of directory listing");
                 }
             }
-            else throw new WebException("Failed to get a response");
+            else throw new WebException("Failed to get a response of directory listing");
+
             return count;
         }
     }
