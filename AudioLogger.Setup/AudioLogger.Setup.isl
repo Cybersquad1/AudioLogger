@@ -342,6 +342,7 @@
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
 		<row><td>AudioLogger.Application.Content_Files</td><td>{DB15CA5D-F94F-496A-9D1A-8527B8A0B176}</td><td>INSTALLDIR</td><td>2</td><td/><td>audiologger.application.cont</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AudioLogger.Application.Primary_output</td><td>{B02682D5-5D0E-41B2-A5CD-D13D664A2851}</td><td>INSTALLDIR</td><td>2</td><td/><td>audiologger.application.prim</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>NewComponent1</td><td>{EEF7CB87-3C20-4EF9-AF15-EC8EF62B889C}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -1050,6 +1051,7 @@
 	<table name="CreateFolder">
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
+		<row><td>INSTALLDIR</td><td>NewComponent1</td></row>
 	</table>
 
 	<table name="CustomAction">
@@ -1168,6 +1170,8 @@
 		<row><td>USERPROFILE</td><td>TARGETDIR</td><td>.:USERPR~1|UserProfile</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
+		<row><td>audiologger.setup</td><td>centro_1_centro_fm</td><td>AUDIOL~1.SET|audiologger.setup</td><td/><td>1</td><td/></row>
+		<row><td>centro_1_centro_fm</td><td>ProgramMenuFolder</td><td>centro~1|centro fm</td><td/><td>1</td><td/></row>
 	</table>
 
 	<table name="DrLocator">
@@ -1861,6 +1865,7 @@
 		<col key="yes" def="s72">Component_</col>
 		<row><td>AlwaysInstall</td><td>AudioLogger.Application.Content_Files</td></row>
 		<row><td>AlwaysInstall</td><td>AudioLogger.Application.Primary_output</td></row>
+		<row><td>AlwaysInstall</td><td>NewComponent1</td></row>
 	</table>
 
 	<table name="File">
@@ -2022,6 +2027,7 @@
 		<col def="S0">Miscellaneous</col>
 		<row><td>AudioLogger.Application.Content_Files</td><td/><td/><td>_5967188B_4CC8_4AA2_9043_413EDD525B03_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>AudioLogger.Application.Primary_output</td><td/><td/><td>_67AC6A44_B863_4134_89F5_917BDC092857_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>NewComponent1</td><td/><td/><td>_73A53A59_6DC6_448F_A7F0_EC10AC6AFFD5_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
@@ -3742,6 +3748,8 @@
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>-1557986923</td></row>
 		<row><td>ID_STRING1</td><td>1033</td><td>http://www.centrofm.lt</td><td>0</td><td/><td>-1557968491</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>Centro FM</td><td>0</td><td/><td>-1557986923</td></row>
+		<row><td>ID_STRING3</td><td>1033</td><td/><td>0</td><td/><td>195251863</td></row>
+		<row><td>ID_STRING4</td><td>1033</td><td>AUDIOL~1|AudioLogger</td><td>0</td><td/><td>195253943</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>-1557986923</td></row>
 	</table>
 
@@ -3982,7 +3990,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{98D422AF-1109-4300-ACFE-6117663D1474}</td></row>
 		<row><td>ISUSSignature</td><td>{843F3914-ABCB-4BCD-A409-7D0013E14494}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewRelease</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewRelease,viewShortcuts</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
@@ -4220,6 +4228,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="s72">Shortcut_</col>
 		<col def="s0">PropertyKey</col>
 		<col def="s0">PropVariantValue</col>
+		<row><td>ShortcutProperty1</td><td>NewShortcut1</td><td>{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}, 12</td><td>1</td></row>
 	</table>
 
 	<table name="ODBCAttribute">
@@ -4518,6 +4527,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
+		<row><td>NewShortcut1</td><td>DesktopFolder</td><td>##ID_STRING4##</td><td>AudioLogger.Application.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td/><td/><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">
