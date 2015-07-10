@@ -2,7 +2,7 @@
 
 namespace AudioLogger.Services
 {
-    internal interface IUploadService
+    public interface IUploadService
     {
         bool TryUploadFile(string source);
         int RemoveFilesOlderThan(DateTime date);

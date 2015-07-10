@@ -56,8 +56,7 @@ namespace AudioLogger.Application
             this.settings = new System.Windows.Forms.TabControl();
             this.tab1 = new System.Windows.Forms.TabPage();
             this.tb_length = new System.Windows.Forms.TextBox();
-            this.tb_tempDir = new System.Windows.Forms.TextBox();
-            this.bt_browseTemp = new System.Windows.Forms.Button();
+            this.tb_keepFilesForDays = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.tab2 = new System.Windows.Forms.TabPage();
             this.tab3 = new System.Windows.Forms.TabPage();
@@ -173,9 +172,9 @@ namespace AudioLogger.Application
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 14);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(61, 13);
+            this.label1.Size = new System.Drawing.Size(81, 13);
             this.label1.TabIndex = 14;
-            this.label1.Text = "Temp path:";
+            this.label1.Text = "Keep for (days):";
             // 
             // progressBar1
             // 
@@ -314,8 +313,7 @@ namespace AudioLogger.Application
             // 
             this.tab1.BackColor = System.Drawing.Color.Transparent;
             this.tab1.Controls.Add(this.tb_length);
-            this.tab1.Controls.Add(this.tb_tempDir);
-            this.tab1.Controls.Add(this.bt_browseTemp);
+            this.tab1.Controls.Add(this.tb_keepFilesForDays);
             this.tab1.Controls.Add(this.label8);
             this.tab1.Controls.Add(this.label1);
             this.tab1.Controls.Add(this.cb_uploadType);
@@ -338,26 +336,15 @@ namespace AudioLogger.Application
             this.tb_length.Text = "60";
             this.tb_length.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // tb_tempDir
+            // tb_KeepFilesForDays
             // 
-            this.tb_tempDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tb_tempDir.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.tb_tempDir.Location = new System.Drawing.Point(103, 11);
-            this.tb_tempDir.Name = "tb_tempDir";
-            this.tb_tempDir.Size = new System.Drawing.Size(231, 20);
-            this.tb_tempDir.TabIndex = 30;
-            this.tb_tempDir.Text = "Select directoy for temp files";
-            // 
-            // bt_browseTemp
-            // 
-            this.bt_browseTemp.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.bt_browseTemp.Location = new System.Drawing.Point(340, 11);
-            this.bt_browseTemp.Name = "bt_browseTemp";
-            this.bt_browseTemp.Size = new System.Drawing.Size(75, 21);
-            this.bt_browseTemp.TabIndex = 29;
-            this.bt_browseTemp.Text = "Browse";
-            this.bt_browseTemp.UseVisualStyleBackColor = true;
-            this.bt_browseTemp.Click += new System.EventHandler(this.bt_browseTemp_Click);
+            this.tb_keepFilesForDays.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_keepFilesForDays.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.tb_keepFilesForDays.Location = new System.Drawing.Point(103, 11);
+            this.tb_keepFilesForDays.Name = "tb_keepFilesForDays";
+            this.tb_keepFilesForDays.Size = new System.Drawing.Size(231, 20);
+            this.tb_keepFilesForDays.TabIndex = 30;
+            this.tb_keepFilesForDays.Text = "Select directoy for temp files";
             // 
             // label8
             // 
@@ -546,9 +533,8 @@ namespace AudioLogger.Application
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label txt_version;
-		private System.Windows.Forms.Button bt_browseTemp;
 		private System.Windows.Forms.FolderBrowserDialog dx_browseTemp;
-		private System.Windows.Forms.TextBox tb_tempDir;
+		private System.Windows.Forms.TextBox tb_keepFilesForDays;
 		private System.Windows.Forms.TextBox tb_length;
     }
 }

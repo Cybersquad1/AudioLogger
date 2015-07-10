@@ -32,27 +32,42 @@ namespace AudioLogger.Application {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("yyyyMMdd-HHmmss")]
         public string AudioFilenameFormat {
             get {
                 return ((string)(this["AudioFilenameFormat"]));
             }
-            set {
-                this["AudioFilenameFormat"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("log4netConfig.xml")]
         public string LogFilename {
             get {
                 return ((string)(this["LogFilename"]));
             }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ProgramData\\CentroFM\\audioTemp")]
+        public string TemporaryFolder {
+            get {
+                return ((string)(this["TemporaryFolder"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ProgramData\\CentroFM\\logs")]
+        public string LogFolder {
+            get {
+                return ((string)(this["LogFolder"]));
+            }
             set {
-                this["LogFilename"] = value;
+                this["LogFolder"] = value;
             }
         }
     }

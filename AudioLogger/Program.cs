@@ -17,6 +17,8 @@ namespace AudioLogger.Application
         [STAThread]
         private static void Main()
         {
+            CreateProgramDataFolderIfMissing();
+
             XmlConfigurator.Configure(new FileInfo(Configuration.Default.LogFilename));
             Logger.Info("Starting application");
 
@@ -36,6 +38,19 @@ namespace AudioLogger.Application
             }
 
             Logger.Info("Exiting application");
+        }
+
+        private static void CreateProgramDataFolderIfMissing()
+        {
+            if (!Directory.Exists(Configuration.Default.TemporaryFolder))
+            {
+                Directory.CreateDirectory(Configuration.Default.TemporaryFolder);
+            }
+
+            if (!Directory.Exists(Configuration.Default.LogFolder))
+            {
+                Directory.CreateDirectory(Configuration.Default.LogFolder);
+            }
         }
     }
 }
