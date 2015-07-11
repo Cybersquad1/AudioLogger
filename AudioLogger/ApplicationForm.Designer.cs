@@ -334,9 +334,8 @@ namespace AudioLogger.Application
             this.tb_length.Size = new System.Drawing.Size(231, 20);
             this.tb_length.TabIndex = 31;
             this.tb_length.Text = "60";
-            this.tb_length.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // tb_KeepFilesForDays
+            // tb_keepFilesForDays
             // 
             this.tb_keepFilesForDays.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tb_keepFilesForDays.ForeColor = System.Drawing.SystemColors.MenuText;
@@ -344,7 +343,6 @@ namespace AudioLogger.Application
             this.tb_keepFilesForDays.Name = "tb_keepFilesForDays";
             this.tb_keepFilesForDays.Size = new System.Drawing.Size(231, 20);
             this.tb_keepFilesForDays.TabIndex = 30;
-            this.tb_keepFilesForDays.Text = "Select directoy for temp files";
             // 
             // label8
             // 
