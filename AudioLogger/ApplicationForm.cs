@@ -27,15 +27,19 @@ namespace AudioLogger.Application
 
         private readonly IConverterService _converterService;
         private readonly IRecorderService _recorderService;
+        private readonly IEncryptionService _encryptionService;
 
         public ApplicationForm(IRecorderService recorderService,
-            IConverterService converterService)
+            IConverterService converterService,
+            IEncryptionService encryptionService)
         {
             if (recorderService == null) throw new ArgumentException("recorderService");
             if (converterService == null) throw new ArgumentException("converterService");
+            if (encryptionService == null) throw new ArgumentException("encryptionService");
 
             _recorderService = recorderService;
             _converterService = converterService;
+            _encryptionService = encryptionService;
 
             AppParameters = new Parameters {TemporaryFolder = Configuration.Default.TemporaryFolder};
 

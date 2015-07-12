@@ -61,8 +61,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConverterService.cs" />
+    <Compile Include="EncryptionService.cs" />
     <Compile Include="FtpUploadService.cs" />
     <Compile Include="IConverterService.cs" />
+    <Compile Include="IEncryptionService.cs" />
     <Compile Include="INI.cs" />
     <Compile Include="IRecorderService.cs" />
     <Compile Include="IUploadService.cs" />

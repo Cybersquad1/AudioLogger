@@ -19,6 +19,7 @@ namespace AudioLogger.Application
                 _container.RegisterType<ApplicationForm>();
                 _container.RegisterType<IRecorderService, RecorderService>(new TransientLifetimeManager());
                 _container.RegisterType<IConverterService, ConverterService>(new ContainerControlledLifetimeManager());
+                _container.RegisterType<IEncryptionService, EncryptionService>(new ContainerControlledLifetimeManager());
             }
             catch (Exception e)
             {
