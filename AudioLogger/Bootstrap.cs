@@ -1,6 +1,5 @@
 ﻿using System;
 using AudioLogger.Services;
-using Ini;
 using log4net;
 using Microsoft.Practices.Unity;
 
