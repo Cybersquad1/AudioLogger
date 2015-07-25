@@ -14,8 +14,11 @@
     <Setting Name="TemporaryFolder" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\ProgramData\CentroFM\audioTemp</Value>
     </Setting>
-    <Setting Name="LogFolder" Type="System.String" Scope="User">
+    <Setting Name="LogFolder" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\ProgramData\CentroFM\logs</Value>
+    </Setting>
+    <Setting Name="ProgramDataFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\ProgramData\CentroFM</Value>
     </Setting>
   </Settings>
 </SettingsFile>

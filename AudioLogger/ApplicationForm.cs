@@ -14,7 +14,7 @@ namespace AudioLogger.Application
     public partial class ApplicationForm : Form
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (ApplicationForm));
-        private readonly IniFile _config = new IniFile(Directory.GetCurrentDirectory() + "/config.ini");
+        private readonly IniFile _config = new IniFile(Configuration.Default.ProgramDataFolder + "/config.ini");
 
         private static Parameters AppParameters { get; set; }
 
@@ -63,7 +63,8 @@ namespace AudioLogger.Application
             tb_hostname.Text = _config.IniReadValue("ftp", "host");
             tb_directory.Text = _config.IniReadValue("ftp", "targetDir");
             tb_username.Text = _config.IniReadValue("ftp", "user");
-            tb_password.Text = _config.IniReadValue("ftp", "pass");
+
+            tb_password.Text = _encryptionService.Decrypt(_config.IniReadValue("ftp", "pass")).Trim((char)0x10); 
 
             cb_uploadType.Text = _config.IniReadValue("upload", "type");
             tb_fileUploadDir.Text = _config.IniReadValue("directory", "path");
@@ -263,7 +264,7 @@ namespace AudioLogger.Application
             _config.IniWriteValue("ftp", "host", tb_hostname.Text);
             _config.IniWriteValue("ftp", "targetDir", tb_directory.Text);
             _config.IniWriteValue("ftp", "user", tb_username.Text);
-            _config.IniWriteValue("ftp", "pass", tb_password.Text);
+            _config.IniWriteValue("ftp", "pass", _encryptionService.Encrypt(tb_password.Text));
 
             _config.IniWriteValue("general", "length", tb_length.Text);
             _config.IniWriteValue("general", "retention_rate", tb_keepFilesForDays.Text);

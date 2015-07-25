@@ -2,7 +2,7 @@
 {
     public interface IEncryptionService
     {
-        byte[] Encrypt(byte[] dataBytes);
-        byte[] Decrypt(byte[] encryptedBytes);
+        string Encrypt(string dataToEncrypt);
+        string Decrypt(string encryptedString);
     }
 }

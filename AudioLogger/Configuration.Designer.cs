@@ -59,15 +59,21 @@ namespace AudioLogger.Application {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("C:\\ProgramData\\CentroFM\\logs")]
         public string LogFolder {
             get {
                 return ((string)(this["LogFolder"]));
             }
-            set {
-                this["LogFolder"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ProgramData\\CentroFM")]
+        public string ProgramDataFolder {
+            get {
+                return ((string)(this["ProgramDataFolder"]));
             }
         }
     }
