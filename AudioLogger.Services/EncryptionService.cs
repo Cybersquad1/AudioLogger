@@ -11,16 +11,20 @@ namespace AudioLogger.Services
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (EncryptionService));
 
-        // This key needs to be hardcoded and deleted when uploaded to repository!
+        // These keys needs to be hardcoded all the time and deleted before uploading to repository!
         // It would also be best to change these if they might have been compromised
         // or uploaded by accident
-        private static readonly byte[] U8Salt = {};
+        private static readonly byte[] U8Salt =
+        {
+            
+        };
 
         private static readonly string Key = "";
 
         public EncryptionService()
         {
-            if (U8Salt.Count() != 16) throw new ArgumentException("the encryption salt is not 16 bytes long or not set");
+            if (U8Salt.Count() == 0)
+                throw new ArgumentException("The encryption salt is not set");
             if (Key.Length == 0) throw new ArgumentException("The encryption key is not set");
         }
 

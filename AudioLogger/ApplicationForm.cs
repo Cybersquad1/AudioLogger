@@ -98,6 +98,7 @@ namespace AudioLogger.Application
             cb_uploadType.Enabled = false;
             tb_fileUploadDir.Enabled = false;
 
+            // Parameter setting and validation
             Invoke(new MethodInvoker(delegate { _filelenght = tb_length.Text; }));
             Invoke(new MethodInvoker(delegate { _progressTotal = progressBar1.Maximum; }));
             Invoke(new MethodInvoker(delegate { _progress = progressBar1.Value; }));
@@ -137,6 +138,26 @@ namespace AudioLogger.Application
                 this.btn_stop_Click(this, e);
                 return;
             }
+
+            if (AppParameters.UploadType.Equals("FTP"))
+            {
+                if (!new FtpUploadService(AppParameters).TestConnection())
+                {
+                    MessageBox.Show("FTP connection check failed. Server details incorrect?");
+                    this.btn_stop_Click(this, e);
+                    return;
+                }
+            }
+            else if (AppParameters.UploadType.Equals("Windows directory"))
+            {
+                if (!Directory.Exists(AppParameters.WindowsDirectoryUploadTarget))
+                {
+                    MessageBox.Show("The specified windows directory for uploading does not exist!");
+                    this.btn_stop_Click(this, e);
+                    return;
+                }
+            }
+
             inzinierius.RunWorkerAsync();
         }
 
