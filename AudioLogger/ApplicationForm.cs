@@ -111,18 +111,12 @@ namespace AudioLogger.Application
             Invoke(new MethodInvoker(delegate
             {
                 int result;
-                if (Int32.TryParse(tb_length.Text, out result))
-                    AppParameters.RecordingDurationInMinutes = result;
-                else
-                    AppParameters.RecordingDurationInMinutes = 0;
+                AppParameters.RecordingDurationInMinutes = Int32.TryParse(tb_length.Text, out result) ? result : 0;
             }));
             Invoke(new MethodInvoker(delegate
             {
                 int result;
-                if (Int32.TryParse(tb_keepFilesForDays.Text, out result))
-                    AppParameters.RetentionRateInDays = result;
-                else
-                    AppParameters.RetentionRateInDays = 0;
+                AppParameters.RetentionRateInDays = Int32.TryParse(tb_keepFilesForDays.Text, out result) ? result : 0;
             }));
 
             if (AppParameters.RetentionRateInDays == 0)
@@ -270,7 +264,15 @@ namespace AudioLogger.Application
                 Thread.Sleep(2000);
             }
 
-            uploadService.RemoveFilesOlderThan(new DateTime(DateTime.Now.Day - AppParameters.RetentionRateInDays));
+            try
+            {
+                uploadService.RemoveFilesOlderThan(new DateTime(DateTime.Now.Day - AppParameters.RetentionRateInDays));
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("Could not remove old files");
+                Logger.Warn(ex.Message);
+            }
         }
 
 
