@@ -102,26 +102,29 @@ namespace AudioLogger.Services
             return count;
         }
 
-        // This behaves differenly than intended but it works
         public bool TestConnection()
         {
-            var address = string.Format("ftp://{0}/{1}",
-                    _host, _targetDirectory);
-            var request = WebRequest.Create(address) as FtpWebRequest;
-            if (request == null) throw new WebException("Failed to create a web request");
-
-            request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-            var response = request.GetResponse();
-            using (var stream = response.GetResponseStream())
+            try
             {
-                if (stream != null)
-                    using (var reader = new StreamReader(stream))
-                    {
-                        var result = reader.ReadToEnd();
-                        return !string.IsNullOrEmpty(result);
-                    }
+                var address = string.Format("ftp://{0}/{1}",
+                    _host, _targetDirectory);
+                var request = WebRequest.Create(address) as FtpWebRequest;
+                if (request == null) throw new WebException("Failed to create a web request");
+
+                request.Method = WebRequestMethods.Ftp.ListDirectory;
+                request.Timeout = 200;
+                request.Credentials = new NetworkCredential(_username, _password);
+                request.ReadWriteTimeout = 200;
+                var response = request.GetResponse();
+                response.GetResponseStream();
+
+                return response.GetResponseStream() != Stream.Null;
             }
-            return false;
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+                return false;
+            }
         }
     }
 }

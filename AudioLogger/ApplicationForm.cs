@@ -98,7 +98,14 @@ namespace AudioLogger.Application
             cb_uploadType.Enabled = false;
             tb_fileUploadDir.Enabled = false;
 
-            // Parameter setting and validation
+            InitializeProperties();
+            if (!ValidateFields()) return;
+
+            inzinierius.RunWorkerAsync();
+        }
+
+        private void InitializeProperties()
+        {
             Invoke(new MethodInvoker(delegate { _filelenght = tb_length.Text; }));
             Invoke(new MethodInvoker(delegate { _progressTotal = progressBar1.Maximum; }));
             Invoke(new MethodInvoker(delegate { _progress = progressBar1.Value; }));
@@ -107,6 +114,7 @@ namespace AudioLogger.Application
             Invoke(new MethodInvoker(delegate { AppParameters.FtpHost = tb_hostname.Text; }));
             Invoke(new MethodInvoker(delegate { AppParameters.FtpUsername = tb_username.Text; }));
             Invoke(new MethodInvoker(delegate { AppParameters.FtpPassword = tb_password.Text; }));
+            Invoke(new MethodInvoker(delegate { AppParameters.FileNameFromDateFormat = Configuration.Default.AudioFilenameFormat; }));
             Invoke(new MethodInvoker(delegate { AppParameters.FtpTargetDirectory = tb_directory.Text; }));
             Invoke(new MethodInvoker(delegate
             {
@@ -118,41 +126,28 @@ namespace AudioLogger.Application
                 int result;
                 AppParameters.RetentionRateInDays = Int32.TryParse(tb_keepFilesForDays.Text, out result) ? result : 0;
             }));
+        }
 
-            if (AppParameters.RetentionRateInDays == 0)
-            {
-                MessageBox.Show("Please enter a valid number to time span field", "Error");
-                this.btn_stop_Click(this, e);
-                return;
-            }
+        private bool ValidateFields()
+        {
+            if (CancelIfUnsatisfied(AppParameters.RetentionRateInDays == 0, 
+                "Please enter a valid number to keep for field")) return false;
 
-            if (AppParameters.RecordingDurationInMinutes == 0)
-            {
-                MessageBox.Show("Please enter a valid number to time span field", "Error");
-                this.btn_stop_Click(this, e);
-                return;
-            }
+            if (CancelIfUnsatisfied(AppParameters.RecordingDurationInMinutes == 0,
+                "Please enter a valid number to time span field")) return false;
 
             if (AppParameters.UploadType.Equals("FTP"))
             {
-                if (!new FtpUploadService(AppParameters).TestConnection())
-                {
-                    MessageBox.Show("FTP connection check failed. Server details incorrect?");
-                    this.btn_stop_Click(this, e);
-                    return;
-                }
+                if (CancelIfUnsatisfied(!new FtpUploadService(AppParameters).TestConnection(),
+                    "FTP connection check failed. Server details incorrect?")) return false;
             }
             else if (AppParameters.UploadType.Equals("Windows directory"))
             {
-                if (!Directory.Exists(AppParameters.WindowsDirectoryUploadTarget))
-                {
-                    MessageBox.Show("The specified windows directory for uploading does not exist!");
-                    this.btn_stop_Click(this, e);
-                    return;
-                }
+                if (CancelIfUnsatisfied(!Directory.Exists(AppParameters.WindowsDirectoryUploadTarget),
+                    "The specified windows directory for uploading does not exist!")) return false;
             }
 
-            inzinierius.RunWorkerAsync();
+            return true;
         }
 
         public void btn_stop_Click(object sender, EventArgs e)
@@ -166,6 +161,17 @@ namespace AudioLogger.Application
             tb_fileUploadDir.Enabled = true;
 
             inzinierius.CancelAsync();
+        }
+
+        private bool CancelIfUnsatisfied(bool condition, string message)
+        {
+            if (condition)
+            {
+                MessageBox.Show(message);
+                this.btn_stop_Click(this, null);
+                return true;
+            }
+            return false;
         }
 
         private DateTime roundup(DateTime dt, TimeSpan d)
