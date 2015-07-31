@@ -76,5 +76,23 @@ namespace AudioLogger.Application {
                 return ((string)(this["ProgramDataFolder"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ProgramData\\CentroFM\\backup")]
+        public string BackupDir {
+            get {
+                return ((string)(this["BackupDir"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int WarningTrigger {
+            get {
+                return ((int)(this["WarningTrigger"]));
+            }
+        }
     }
 }

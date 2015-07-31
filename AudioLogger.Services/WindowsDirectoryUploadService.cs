@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -35,28 +36,47 @@ namespace AudioLogger.Services
             return true;
         }
 
-        public int RemoveFilesOlderThan(DateTime date)
+        public bool TestConnection()
         {
-            if (_destinationDirectory == null) return 0;
-            var numberOfFilesRemoved = 0;
+            return Directory.Exists(_destinationDirectory);
+        }
+
+        public bool RemoveFiles(IEnumerable<string> files)
+        {
+            try
+            {
+                foreach (var file in files)
+                {
+                    File.Delete(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("Failed to delete files");
+                Logger.Warn(ex.Message);
+                return false;
+            }
+            return true;
+        }
+
+        public IEnumerable<string> GetFilesOlderThan(DateTime date)
+        {
+            if (_destinationDirectory == null) throw new ArgumentException("Destination directory is not set");
             var dirInfo = new DirectoryInfo(_destinationDirectory);
             var allFiles = dirInfo.GetFiles("*.mp3", SearchOption.AllDirectories);
             foreach (var file in allFiles)
             {
                 DateTime fileTime;
-                if (!DateTime.TryParseExact(file.Name, _format, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out fileTime))
+                if (!DateTime.TryParseExact(file.Name.Split(Char.Parse(".")).First(), _format, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out fileTime))
                 {
                     Logger.Warn(string.Format("Malformed file name {0}", file.FullName));
                     continue;
                 }
                 if (fileTime.CompareTo(date) > 0)
                 {
-                    file.Delete();
-                    numberOfFilesRemoved++;
-                    Logger.Info(string.Format("Removing file {0}", file.FullName));
+                    yield return file.FullName;
                 }
             }
-            return numberOfFilesRemoved;
         }
     }
 }

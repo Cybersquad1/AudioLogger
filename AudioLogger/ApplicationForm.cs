@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using AudioLogger.Services;
@@ -64,7 +66,7 @@ namespace AudioLogger.Application
             tb_directory.Text = _config.IniReadValue("ftp", "targetDir");
             tb_username.Text = _config.IniReadValue("ftp", "user");
 
-            tb_password.Text = _encryptionService.Decrypt(_config.IniReadValue("ftp", "pass")).Trim((char)0x10); 
+            tb_password.Text = _encryptionService.Decrypt(_config.IniReadValue("ftp", "pass")).Trim((char) 0x10);
 
             cb_uploadType.Text = _config.IniReadValue("upload", "type");
             tb_fileUploadDir.Text = _config.IniReadValue("directory", "path");
@@ -79,7 +81,6 @@ namespace AudioLogger.Application
 
         private const int WmNchittest = 0x84;
         private const int HtCaption = 0x2;
-
 
         public void set_device(object sender, EventArgs e)
         {
@@ -101,7 +102,41 @@ namespace AudioLogger.Application
             InitializeProperties();
             if (!ValidateFields()) return;
 
+            if (CheckAndWarnForFileDeletion()) return;
+
             inzinierius.RunWorkerAsync();
+        }
+
+        private bool CheckAndWarnForFileDeletion()
+        {
+            IUploadService service = null;
+            if (AppParameters.UploadType.Equals("FTP"))
+                service = new FtpUploadService(AppParameters);
+            else if (AppParameters.UploadType.Equals("Windows directory"))
+                service = new WindowsDirectoryUploadService(AppParameters);
+
+            if (service == null)
+            {
+                MessageBox.Show("Something went wrong with upload services, try reconfiguring settings.");
+                return true;
+            }
+
+            var deletableFiles = service.GetFilesOlderThan(GetEndOfLifeDate()).ToArray();
+            if (deletableFiles.Count() > Configuration.Default.WarningTrigger)
+            {
+                var result =
+                    MessageBox.Show(
+                        string.Format(
+                            "{0} files of recordings will be deleted when this cycle is finished. Are you sure you want to do this?",
+                            deletableFiles.Count()),
+                        "Warning", MessageBoxButtons.YesNo);
+
+                if (CancelIfUnsatisfied(
+                    result.Equals(DialogResult.No),
+                    "Check the 'keep for' field, you may have entered an incorrect value."))
+                    return true;
+            }
+            return false;
         }
 
         private void InitializeProperties()
@@ -114,7 +149,9 @@ namespace AudioLogger.Application
             Invoke(new MethodInvoker(delegate { AppParameters.FtpHost = tb_hostname.Text; }));
             Invoke(new MethodInvoker(delegate { AppParameters.FtpUsername = tb_username.Text; }));
             Invoke(new MethodInvoker(delegate { AppParameters.FtpPassword = tb_password.Text; }));
-            Invoke(new MethodInvoker(delegate { AppParameters.FileNameFromDateFormat = Configuration.Default.AudioFilenameFormat; }));
+            Invoke(
+                new MethodInvoker(
+                    delegate { AppParameters.FileNameFromDateFormat = Configuration.Default.AudioFilenameFormat; }));
             Invoke(new MethodInvoker(delegate { AppParameters.FtpTargetDirectory = tb_directory.Text; }));
             Invoke(new MethodInvoker(delegate
             {
@@ -130,7 +167,7 @@ namespace AudioLogger.Application
 
         private bool ValidateFields()
         {
-            if (CancelIfUnsatisfied(AppParameters.RetentionRateInDays == 0, 
+            if (CancelIfUnsatisfied(AppParameters.RetentionRateInDays < 0,
                 "Please enter a valid number to keep for field")) return false;
 
             if (CancelIfUnsatisfied(AppParameters.RecordingDurationInMinutes == 0,
@@ -169,9 +206,8 @@ namespace AudioLogger.Application
             {
                 MessageBox.Show(message);
                 this.btn_stop_Click(this, null);
-                return true;
             }
-            return false;
+            return condition;
         }
 
         private DateTime roundup(DateTime dt, TimeSpan d)
@@ -252,7 +288,8 @@ namespace AudioLogger.Application
             {
                 uploadService = new WindowsDirectoryUploadService(AppParameters);
             }
-            if (uploadService == null) throw new ArgumentException("Failed to construct upload service, the type selection must be broken.");
+            if (uploadService == null)
+                throw new ArgumentException("Failed to construct upload service, the type selection must be broken.");
 
             // Retry cycle
             var retryCount = 3;
@@ -272,7 +309,10 @@ namespace AudioLogger.Application
 
             try
             {
-                uploadService.RemoveFilesOlderThan(new DateTime(DateTime.Now.Day - AppParameters.RetentionRateInDays));
+                var files =
+                    uploadService.GetFilesOlderThan(GetEndOfLifeDate()).ToArray();
+                if (!uploadService.RemoveFiles(files))
+                    CopyToBackupDir(files);
             }
             catch (Exception ex)
             {
@@ -281,6 +321,18 @@ namespace AudioLogger.Application
             }
         }
 
+        private DateTime GetEndOfLifeDate()
+        {
+            return new DateTime(DateTime.Now.Day - AppParameters.RetentionRateInDays);
+        }
+
+        private void CopyToBackupDir(IEnumerable<string> files)
+        {
+            if (!Directory.Exists(Configuration.Default.BackupDir))
+                Directory.CreateDirectory(Configuration.Default.BackupDir);
+            foreach (var file in files)
+                File.Copy(file, Configuration.Default.BackupDir);
+        }
 
         private void inzinierius_RunWorkCompleted(object sender, RunWorkerCompletedEventArgs e)
         {

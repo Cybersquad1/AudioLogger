@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace AudioLogger.Services
             return true;
         }
 
-        public int RemoveFilesOlderThan(DateTime date)
+        public IEnumerable<string> GetFilesOlderThan(DateTime date)
         {
             var webRequest = WebRequest.Create(string.Format("ftp://{0}/{1}", _host, _targetDirectory)) as FtpWebRequest;
             if (webRequest == null) throw new WebException("Failed to create a web request");
@@ -81,15 +82,7 @@ namespace AudioLogger.Services
                                 }
                                 if (fileTime.CompareTo(date) > 0)
                                 {
-                                    var deleteRequest =
-                                        WebRequest.Create(string.Format("ftp://{0}/{1}", _host, line)) as FtpWebRequest;
-                                    if (deleteRequest == null) throw new WebException("Failed to create a web request");
-                                    deleteRequest.Method = WebRequestMethods.Ftp.DeleteFile;
-                                    deleteRequest.Credentials = new NetworkCredential(_username, _password);
-                                    var deleteResponse = deleteRequest.GetResponse();
-
-                                    count++;
-                                    Logger.Info(string.Format("Removing file {0}", fullFileName));
+                                    yield return line;
                                 }
                             }
                         }
@@ -98,8 +91,6 @@ namespace AudioLogger.Services
                 }
             }
             else throw new WebException("Failed to get a response of directory listing");
-
-            return count;
         }
 
         public bool TestConnection()
@@ -125,6 +116,29 @@ namespace AudioLogger.Services
                 Logger.Error(ex.Message);
                 return false;
             }
+        }
+
+        public bool RemoveFiles(IEnumerable<string> files)
+        {
+            try
+            {
+                foreach (var file in files)
+                {
+
+                    var deleteRequest = WebRequest.Create(string.Format("ftp://{0}/{1}", _host, file)) as FtpWebRequest;
+                    if (deleteRequest == null) throw new WebException("Failed to create a web request");
+                    deleteRequest.Method = WebRequestMethods.Ftp.DeleteFile;
+                    deleteRequest.Credentials = new NetworkCredential(_username, _password);
+                    deleteRequest.GetResponse();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("Failed to delete files");
+                Logger.Warn(ex.Message);
+                return false;
+            }
+            return true;
         }
     }
 }
