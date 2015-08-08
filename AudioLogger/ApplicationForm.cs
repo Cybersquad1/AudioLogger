@@ -66,7 +66,7 @@ namespace AudioLogger.Application
             tb_directory.Text = _config.IniReadValue("ftp", "targetDir");
             tb_username.Text = _config.IniReadValue("ftp", "user");
 
-            tb_password.Text = _encryptionService.Decrypt(_config.IniReadValue("ftp", "pass")).Trim((char) 0x10);
+            tb_password.Text = _encryptionService.Decrypt(_config.IniReadValue("ftp", "pass"));
 
             cb_uploadType.Text = _config.IniReadValue("upload", "type");
             tb_fileUploadDir.Text = _config.IniReadValue("directory", "path");
@@ -323,7 +323,7 @@ namespace AudioLogger.Application
 
         private DateTime GetEndOfLifeDate()
         {
-            return new DateTime(DateTime.Now.Day - AppParameters.RetentionRateInDays);
+            return DateTime.Now.Subtract(TimeSpan.FromDays(AppParameters.RetentionRateInDays));
         }
 
         private void CopyToBackupDir(IEnumerable<string> files)

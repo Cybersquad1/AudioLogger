@@ -80,7 +80,7 @@ namespace AudioLogger.Services
                                     Logger.Warn(string.Format("Malformed file name {0}", file));
                                     continue;
                                 }
-                                if (fileTime.CompareTo(date) > 0)
+                                if (fileTime.CompareTo(date) < 0)
                                 {
                                     yield return line;
                                 }

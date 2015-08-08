@@ -15,9 +15,7 @@ namespace AudioLogger.Services
         // It would also be best to change these if they might have been compromised
         // or uploaded by accident
         private static readonly byte[] U8Salt =
-        {
-            
-        };
+        {};
 
         private static readonly string Key = "";
 
@@ -80,7 +78,7 @@ namespace AudioLogger.Services
                             cryptoStream.Write(data, 0, data.Length);
                             cryptoStream.Flush();
 
-                            return Encoding.UTF8.GetString(memoryStream.ToArray());
+                            return Encoding.UTF8.GetString(memoryStream.ToArray()).TrimEnd((char) 0x10);
                         }
                     }
                 }
