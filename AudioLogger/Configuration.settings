@@ -24,7 +24,7 @@
       <Value Profile="(Default)">C:\ProgramData\CentroFM\backup</Value>
     </Setting>
     <Setting Name="WarningTrigger" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">25</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -88,7 +88,7 @@ namespace AudioLogger.Application {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
         public int WarningTrigger {
             get {
                 return ((int)(this["WarningTrigger"]));
