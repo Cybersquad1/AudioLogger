@@ -52,7 +52,7 @@ namespace AudioLogger.Application {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ProgramData\\CentroFM\\audioTemp")]
+        [global::System.Configuration.DefaultSettingValueAttribute("recordings")]
         public string TemporaryFolder {
             get {
                 return ((string)(this["TemporaryFolder"]));
@@ -61,16 +61,7 @@ namespace AudioLogger.Application {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ProgramData\\CentroFM\\logs")]
-        public string LogFolder {
-            get {
-                return ((string)(this["LogFolder"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ProgramData\\CentroFM")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ProgramData\\CentroFM\\")]
         public string ProgramDataFolder {
             get {
                 return ((string)(this["ProgramDataFolder"]));
@@ -79,7 +70,7 @@ namespace AudioLogger.Application {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ProgramData\\CentroFM\\backup")]
+        [global::System.Configuration.DefaultSettingValueAttribute("backup")]
         public string BackupDir {
             get {
                 return ((string)(this["BackupDir"]));
@@ -92,6 +83,15 @@ namespace AudioLogger.Application {
         public int WarningTrigger {
             get {
                 return ((int)(this["WarningTrigger"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("logs")]
+        public string LogFolder {
+            get {
+                return ((string)(this["LogFolder"]));
             }
         }
     }

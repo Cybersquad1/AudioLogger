@@ -58,7 +58,6 @@ namespace AudioLogger.Services
             webRequest.Method = WebRequestMethods.Ftp.ListDirectory;
             webRequest.Credentials = new NetworkCredential(_username, _password);
 
-            var count = 0;
             var webResponse = webRequest.GetResponse() as FtpWebResponse;
             if (webResponse != null)
             {

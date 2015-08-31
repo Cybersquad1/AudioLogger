@@ -24,9 +24,7 @@ namespace AudioLogger.Services
             try
             {
                 var fullpath = string.Format("{0}\\{1}", _destinationDirectory, source.Split('\\').Last());
-                var complete = File.ReadAllBytes(source);
-                File.WriteAllBytes(fullpath, complete);
-                    
+                File.Copy(source, fullpath);
             }
             catch (Exception e)
             {

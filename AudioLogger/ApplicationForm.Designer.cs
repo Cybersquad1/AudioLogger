@@ -478,7 +478,7 @@ namespace AudioLogger.Application
             this.Name = "ApplicationForm";
             this.Opacity = 0.96D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "AudioLogger v1.4.1";
+            this.Text = "AudioLogger v1.5.1";
             this.TopMost = true;
             this.groupBox1.ResumeLayout(false);
             this.settings.ResumeLayout(false);

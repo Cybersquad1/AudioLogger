@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using log4net;
 using log4net.Config;
+using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Unity;
 
 namespace AudioLogger.Application
@@ -17,7 +18,7 @@ namespace AudioLogger.Application
         [STAThread]
         private static void Main()
         {
-            CreateProgramDataFolderIfMissing();
+            SetUpapplicationDataFolders();
 
             XmlConfigurator.Configure(new FileInfo(Configuration.Default.LogFilename));
             Logger.Info("Starting application");
@@ -40,17 +41,15 @@ namespace AudioLogger.Application
             Logger.Info("Exiting application");
         }
 
-        private static void CreateProgramDataFolderIfMissing()
+        private static void SetUpapplicationDataFolders()
         {
-            if (!Directory.Exists(Configuration.Default.TemporaryFolder))
-            {
-                Directory.CreateDirectory(Configuration.Default.TemporaryFolder);
-            }
+            if (!Directory.Exists(Configuration.Default.TemporaryFolder.GetProgramDataSubFolder()))
+                Directory.CreateDirectory(Configuration.Default.TemporaryFolder.GetProgramDataSubFolder());
+            else
+                Directory.GetFiles(Configuration.Default.TemporaryFolder.GetProgramDataSubFolder()).ForEach(File.Delete);
 
-            if (!Directory.Exists(Configuration.Default.LogFolder))
-            {
-                Directory.CreateDirectory(Configuration.Default.LogFolder);
-            }
+            if (!Directory.Exists(Configuration.Default.LogFolder.GetProgramDataSubFolder()))
+                Directory.CreateDirectory(Configuration.Default.LogFolder.GetProgramDataSubFolder());
         }
     }
 }

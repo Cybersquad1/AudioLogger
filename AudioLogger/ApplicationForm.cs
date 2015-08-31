@@ -16,7 +16,9 @@ namespace AudioLogger.Application
     public partial class ApplicationForm : Form
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (ApplicationForm));
-        private readonly IniFile _config = new IniFile(Configuration.Default.ProgramDataFolder + "/config.ini");
+        private readonly IniFile _config = new IniFile(
+            Extentions.GetProgramFolder() + 
+            Configuration.Default.IniFilename);
 
         private static Parameters AppParameters { get; set; }
 
@@ -43,7 +45,7 @@ namespace AudioLogger.Application
             _converterService = converterService;
             _encryptionService = encryptionService;
 
-            AppParameters = new Parameters {TemporaryFolder = Configuration.Default.TemporaryFolder};
+            AppParameters = new Parameters {TemporaryFolder = Configuration.Default.TemporaryFolder.GetProgramDataSubFolder()};
 
             InitializeComponent();
 
@@ -273,21 +275,26 @@ namespace AudioLogger.Application
 
             UploadConvertedFile(fullpathMp3);
 
-            File.Delete(fullpathWav);
-            File.Delete(fullpathMp3);
+            try
+            {
+                File.Delete(fullpathWav);
+                File.Delete(fullpathMp3);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex.Message);
+            }
         }
 
         private void UploadConvertedFile(string fullpathMp3)
         {
             IUploadService uploadService = null;
             if (AppParameters.UploadType.Equals("FTP"))
-            {
                 uploadService = new FtpUploadService(AppParameters);
-            }
+
             if (AppParameters.UploadType.Equals("Windows directory"))
-            {
                 uploadService = new WindowsDirectoryUploadService(AppParameters);
-            }
+
             if (uploadService == null)
                 throw new ArgumentException("Failed to construct upload service, the type selection must be broken.");
 
@@ -328,10 +335,10 @@ namespace AudioLogger.Application
 
         private void CopyToBackupDir(IEnumerable<string> files)
         {
-            if (!Directory.Exists(Configuration.Default.BackupDir))
-                Directory.CreateDirectory(Configuration.Default.BackupDir);
+            if (!Directory.Exists(Configuration.Default.BackupDir.GetProgramDataSubFolder()))
+                Directory.CreateDirectory(Configuration.Default.BackupDir.GetProgramDataSubFolder());
             foreach (var file in files)
-                File.Copy(file, Configuration.Default.BackupDir);
+                File.Copy(file, Configuration.Default.BackupDir.GetProgramDataSubFolder());
         }
 
         private void inzinierius_RunWorkCompleted(object sender, RunWorkerCompletedEventArgs e)

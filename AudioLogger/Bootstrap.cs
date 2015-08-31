@@ -5,7 +5,7 @@ using Microsoft.Practices.Unity;
 
 namespace AudioLogger.Application
 {
-    public class Bootstrap
+    public sealed class Bootstrap : IDisposable
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (Bootstrap));
         private readonly IUnityContainer _container;
@@ -29,6 +29,11 @@ namespace AudioLogger.Application
         public IUnityContainer Container()
         {
             return _container;
+        }
+
+        public void Dispose()
+        {
+            _container.Dispose();
         }
     }
 }
