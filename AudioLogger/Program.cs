@@ -45,8 +45,6 @@ namespace AudioLogger.Application
         {
             if (!Directory.Exists(Configuration.Default.TemporaryFolder.GetProgramDataSubFolder()))
                 Directory.CreateDirectory(Configuration.Default.TemporaryFolder.GetProgramDataSubFolder());
-            else
-                Directory.GetFiles(Configuration.Default.TemporaryFolder.GetProgramDataSubFolder()).ForEach(File.Delete);
 
             if (!Directory.Exists(Configuration.Default.LogFolder.GetProgramDataSubFolder()))
                 Directory.CreateDirectory(Configuration.Default.LogFolder.GetProgramDataSubFolder());
