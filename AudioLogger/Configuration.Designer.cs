@@ -32,27 +32,66 @@ namespace AudioLogger.Application {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("yyyyMMdd-HHmmss")]
         public string AudioFilenameFormat {
             get {
                 return ((string)(this["AudioFilenameFormat"]));
             }
-            set {
-                this["AudioFilenameFormat"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("log4netConfig.xml")]
         public string LogFilename {
             get {
                 return ((string)(this["LogFilename"]));
             }
-            set {
-                this["LogFilename"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("recordings")]
+        public string TemporaryFolder {
+            get {
+                return ((string)(this["TemporaryFolder"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ProgramData\\CentroFM\\")]
+        public string ProgramDataFolder {
+            get {
+                return ((string)(this["ProgramDataFolder"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("backup")]
+        public string BackupDir {
+            get {
+                return ((string)(this["BackupDir"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public int WarningTrigger {
+            get {
+                return ((int)(this["WarningTrigger"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("logs")]
+        public string LogFolder {
+            get {
+                return ((string)(this["LogFolder"]));
             }
         }
     }

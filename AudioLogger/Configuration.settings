@@ -5,11 +5,26 @@
     <Setting Name="IniFilename" Type="System.String" Scope="Application">
       <Value Profile="(Default)">\config.ini</Value>
     </Setting>
-    <Setting Name="AudioFilenameFormat" Type="System.String" Scope="User">
+    <Setting Name="AudioFilenameFormat" Type="System.String" Scope="Application">
       <Value Profile="(Default)">yyyyMMdd-HHmmss</Value>
     </Setting>
-    <Setting Name="LogFilename" Type="System.String" Scope="User">
+    <Setting Name="LogFilename" Type="System.String" Scope="Application">
       <Value Profile="(Default)">log4netConfig.xml</Value>
+    </Setting>
+    <Setting Name="TemporaryFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">recordings</Value>
+    </Setting>
+    <Setting Name="ProgramDataFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\ProgramData\CentroFM\</Value>
+    </Setting>
+    <Setting Name="BackupDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">backup</Value>
+    </Setting>
+    <Setting Name="WarningTrigger" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="LogFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">logs</Value>
     </Setting>
   </Settings>
 </SettingsFile>

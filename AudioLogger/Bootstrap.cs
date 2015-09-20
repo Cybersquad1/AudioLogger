@@ -1,12 +1,11 @@
 ﻿using System;
 using AudioLogger.Services;
-using Ini;
 using log4net;
 using Microsoft.Practices.Unity;
 
 namespace AudioLogger.Application
 {
-    public class Bootstrap
+    public sealed class Bootstrap : IDisposable
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (Bootstrap));
         private readonly IUnityContainer _container;
@@ -17,11 +16,9 @@ namespace AudioLogger.Application
             {
                 _container = new UnityContainer();
                 _container.RegisterType<ApplicationForm>();
-                _container.RegisterType<IFtpClientService, FtpClientService>(
-                    new ContainerControlledLifetimeManager(),
-                    new InjectionConstructor(new IniFile(Configuration.Default.IniFilename)));
                 _container.RegisterType<IRecorderService, RecorderService>(new TransientLifetimeManager());
                 _container.RegisterType<IConverterService, ConverterService>(new ContainerControlledLifetimeManager());
+                _container.RegisterType<IEncryptionService, EncryptionService>(new ContainerControlledLifetimeManager());
             }
             catch (Exception e)
             {
@@ -32,6 +29,11 @@ namespace AudioLogger.Application
         public IUnityContainer Container()
         {
             return _container;
+        }
+
+        public void Dispose()
+        {
+            _container.Dispose();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using log4net;
@@ -10,24 +11,12 @@ namespace AudioLogger.Services
     public class ConverterService : IConverterService
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (ConverterService));
-        private static readonly object ThreadLock = new object();
         private string _fullpathmp3;
         private string _fullpathwav;
         private Thread _task;
 
-        public ConverterService()
-        {
-            TaskFinished = true;
-        }
-
-        private bool TaskFinished { get; set; }
-
         public void AsyncConvert(string fullPathWav, string fullPathMp3)
         {
-            lock (ThreadLock)
-            {
-                TaskFinished = false;
-            }
             _fullpathmp3 = fullPathMp3;
             _fullpathwav = fullPathWav;
             _task = new Thread(Wav2Mp3);
@@ -36,7 +25,7 @@ namespace AudioLogger.Services
 
         public void Wait()
         {
-            if(_task.IsAlive)
+            if (_task.IsAlive)
                 _task.Join();
         }
 
@@ -55,11 +44,6 @@ namespace AudioLogger.Services
                     }
                 }
                 wavefilesource.Close();
-
-                lock (ThreadLock)
-                {
-                    TaskFinished = true;
-                }
             }
             catch (Exception e)
             {
