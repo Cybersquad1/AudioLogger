@@ -215,6 +215,7 @@ namespace AudioLogger.Application
         private void bt_Save_Click(object sender, EventArgs e)
         {
             _config.IniWriteValue("upload", "type", cb_uploadType.Text);
+
             _config.IniWriteValue("ftp", "host", tb_hostname.Text);
             _config.IniWriteValue("ftp", "targetDir", tb_directory.Text);
             _config.IniWriteValue("ftp", "user", tb_username.Text);
@@ -222,6 +223,7 @@ namespace AudioLogger.Application
 
 			_config.IniWriteValue("file", "pathWav", tb_tempDir.Text);
 			_config.IniWriteValue("file", "pathMp3", tb_tempDir.Text);
+
 			_config.IniWriteValue("general", "length", tb_length.Text);
 			_config.IniWriteValue("general", "temp", tb_tempDir.Text);
 
