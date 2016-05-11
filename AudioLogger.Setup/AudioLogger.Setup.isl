@@ -3999,7 +3999,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{98D422AF-1109-4300-ACFE-6117663D1474}</td></row>
 		<row><td>ISUSSignature</td><td>{843F3914-ABCB-4BCD-A409-7D0013E14494}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewRelease,viewShortcuts,viewProject,viewAppFiles,viewFeatureFiles</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewRelease,viewShortcuts,viewProject,viewAppFiles,viewFeatureFiles,viewISToday</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
@@ -4057,6 +4057,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 	<table name="LaunchCondition">
 		<col key="yes" def="s255">Condition</col>
 		<col def="l255">Description</col>
+		<row><td>(Not Version9X) And (Not (VersionNT&gt;=400 And VersionNT&lt;=502))</td><td>##IDPROP_EXPRESS_LAUNCH_CONDITION_OS##</td></row>
 		<row><td>DOTNETVERSION40CLIENT&gt;="#1"</td><td>##IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION40CLIENT##</td></row>
 	</table>
 
@@ -4375,7 +4376,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
 		<row><td>ProductCode</td><td>{A38692DB-FF77-4340-8860-E9A34A1E3265}</td><td/></row>
 		<row><td>ProductName</td><td>AudioLogger</td><td/></row>
-		<row><td>ProductVersion</td><td>1.5.1</td><td/></row>
+		<row><td>ProductVersion</td><td>1.6</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
