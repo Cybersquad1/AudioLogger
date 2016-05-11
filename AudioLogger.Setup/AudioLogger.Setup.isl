@@ -343,8 +343,8 @@
 		<row><td>AudioLogger.Application.Content_Files</td><td>{DB15CA5D-F94F-496A-9D1A-8527B8A0B176}</td><td>INSTALLDIR</td><td>2</td><td/><td>audiologger.application.cont</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AudioLogger.Application.Primary_output</td><td>{B02682D5-5D0E-41B2-A5CD-D13D664A2851}</td><td>INSTALLDIR</td><td>2</td><td/><td>audiologger.application.prim</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>NewComponent1</td><td>{EEF7CB87-3C20-4EF9-AF15-EC8EF62B889C}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>libmp3lame.32.dll</td><td>{B7282B62-6880-4BD5-BC94-42E44FB2EB49}</td><td>INSTALLDIR</td><td>2</td><td/><td>libmp3lame.32.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>libmp3lame.64.dll</td><td>{886B3DFB-D8FE-419D-87CF-35DFD85159EB}</td><td>INSTALLDIR</td><td>2</td><td/><td>libmp3lame.64.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>libmp3lame.32.dll</td><td>{7F7B4959-A2D8-4F57-9BDE-E9D839209574}</td><td>INSTALLDIR</td><td>2</td><td/><td>libmp3lame.32.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>libmp3lame.64.dll</td><td>{F7258921-6701-42E0-B1AF-7EE40105ABC7}</td><td>INSTALLDIR</td><td>2</td><td/><td>libmp3lame.64.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -1054,6 +1054,8 @@
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
 		<row><td>INSTALLDIR</td><td>NewComponent1</td></row>
+		<row><td>INSTALLDIR</td><td>libmp3lame.32.dll</td></row>
+		<row><td>INSTALLDIR</td><td>libmp3lame.64.dll</td></row>
 	</table>
 
 	<table name="CustomAction">
@@ -1887,8 +1889,8 @@
 		<col def="S72">ISComponentSubFolder_</col>
 		<row><td>audiologger.application.cont</td><td>AudioLogger.Application.Content_Files</td><td>AudioLogger.Application.Content Files</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;AudioLogger.Application&gt;|ContentFiles</td><td>3</td><td/></row>
 		<row><td>audiologger.application.prim</td><td>AudioLogger.Application.Primary_output</td><td>AudioLogger.Application.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;AudioLogger.Application&gt;|Built</td><td>3</td><td/></row>
-		<row><td>libmp3lame.32.dll</td><td>libmp3lame.32.dll</td><td>LIBMP3~1.DLL|libmp3lame.32.dll</td><td>0</td><td/><td/><td/><td>1</td><td>D:\NET_Projects\AudioLogger\AudioLogger.Services\libmp3lame.32.dll</td><td>1</td><td/></row>
-		<row><td>libmp3lame.64.dll</td><td>libmp3lame.64.dll</td><td>LIBMP3~1.DLL|libmp3lame.64.dll</td><td>0</td><td/><td/><td/><td>1</td><td>D:\NET_Projects\AudioLogger\AudioLogger.Services\libmp3lame.64.dll</td><td>1</td><td/></row>
+		<row><td>libmp3lame.32.dll</td><td>libmp3lame.32.dll</td><td>LIBMP3~1.DLL|libmp3lame.32.dll</td><td>0</td><td/><td/><td/><td>1</td><td>E:\CS\AudioLogger\AudioLogger.Services\libmp3lame.32.dll</td><td>1</td><td/></row>
+		<row><td>libmp3lame.64.dll</td><td>libmp3lame.64.dll</td><td>LIBMP3~1.DLL|libmp3lame.64.dll</td><td>0</td><td/><td/><td/><td>1</td><td>E:\CS\AudioLogger\AudioLogger.Services\libmp3lame.64.dll</td><td>1</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -2035,8 +2037,8 @@
 		<row><td>AudioLogger.Application.Content_Files</td><td/><td/><td>_5967188B_4CC8_4AA2_9043_413EDD525B03_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>AudioLogger.Application.Primary_output</td><td/><td/><td>_67AC6A44_B863_4134_89F5_917BDC092857_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>NewComponent1</td><td/><td/><td>_73A53A59_6DC6_448F_A7F0_EC10AC6AFFD5_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>libmp3lame.32.dll</td><td/><td/><td>_162E9FCC_6FB3_4B21_B86D_B353B24E2A30_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>libmp3lame.64.dll</td><td/><td/><td>_78BBECB2_F2C0_4ABC_BE28_7FB6AFB86A57_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>libmp3lame.32.dll</td><td/><td/><td>_5ADBE0D3_0EAD_4240_8F77_734867C7EC46_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>libmp3lame.64.dll</td><td/><td/><td>_69AFA218_6144_402E_9669_5F9EB4A10D2F_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
