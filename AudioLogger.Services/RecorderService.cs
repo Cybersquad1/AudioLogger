@@ -4,22 +4,51 @@ using NAudio.Wave;
 
 namespace AudioLogger.Services
 {
+    public class Device
+    {
+        public Device(WaveInCapabilities capabilities, int deviceId, string productName = null)
+        {
+            Capabilities = capabilities;
+            DeviceId = deviceId;
+            ProductName = productName ?? Capabilities.ProductName;
+        }
+
+        public Device() {}
+
+        public WaveInCapabilities Capabilities { get; }
+        public string ProductName { get; set; }
+        public int DeviceId { get; set; }
+    }
+
+    public class WaveInDeviceFactory
+    {
+        public static IWaveIn GetWaveInDevice(Device device)
+        {
+            switch (device.DeviceId)
+            {
+                case int.MaxValue:
+                    return new  WasapiLoopbackCapture();
+                default:
+                    return new WaveInEvent
+                    {
+                        DeviceNumber = (int)device.DeviceId,
+                        WaveFormat = new WaveFormat(48000, 16, 2)
+                    };
+            }
+        }
+    }
     public class RecorderService : IRecorderService
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (RecorderService));
         private readonly object _lock = new object();
 
         private WaveFileWriter _waveFile;
-        private WaveInEvent _waveSource;
+        private IWaveIn _waveSource;
 
-        public void Setup(int device)
+        public void Setup(Device device)
         {
             _waveFile = null;
-            _waveSource = new WaveInEvent
-            {
-                DeviceNumber = device,
-                WaveFormat = new WaveFormat(48000, 16, 2)
-            };
+            _waveSource = WaveInDeviceFactory.GetWaveInDevice(device);
             _waveSource.DataAvailable += waveSource_DataAvailable;
             _waveSource.RecordingStopped += waveSource_RecordingStopped;
         }
@@ -29,10 +58,7 @@ namespace AudioLogger.Services
             if (_waveSource == null) throw new ArgumentException("wave source not set up");
             lock (_lock)
             {
-                if (_waveFile != null)
-                {
-                    _waveFile.Dispose();
-                }
+                _waveFile?.Dispose();
                 _waveFile = new WaveFileWriter(filename, _waveSource.WaveFormat);
             }
         }

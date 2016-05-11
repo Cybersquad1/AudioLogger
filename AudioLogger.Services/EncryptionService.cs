@@ -15,9 +15,9 @@ namespace AudioLogger.Services
         // It would also be best to change these if they might have been compromised
         // or uploaded by accident
         private static readonly byte[] U8Salt =
-        {};
+        {0x4, 0x4, 0x4, 0x4, 0x4, 0x4, 0x4, 0x4, 0x4};
 
-        private static readonly string Key = "";
+        private static readonly string Key = "keykeykeykeykey";
 
         public EncryptionService()
         {

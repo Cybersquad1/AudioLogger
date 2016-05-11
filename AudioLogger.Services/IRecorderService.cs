@@ -2,7 +2,7 @@
 {
     public interface IRecorderService
     {
-        void Setup(int device);
+        void Setup(Device device);
         void WaveFile(string filename);
         void StartRecording();
         void StopRecording();

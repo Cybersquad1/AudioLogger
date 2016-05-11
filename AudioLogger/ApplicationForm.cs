@@ -9,6 +9,7 @@ using AudioLogger.Services;
 using NAudio.CoreAudioApi;
 using Ini;
 using log4net;
+using Microsoft.Practices.ObjectBuilder2;
 using NAudio.Wave;
 
 namespace AudioLogger.Application
@@ -25,9 +26,8 @@ namespace AudioLogger.Application
         private string _filelenght;
         private int _progress;
         private int _progressTotal;
-        public WaveIn Device;
-        private int _deviceId;
-        public string DeviceName;
+        private Dictionary<int, Device> devices;
+        private Device _activeDevice;
 
         private readonly IConverterService _converterService;
         private readonly IRecorderService _recorderService;
@@ -49,17 +49,18 @@ namespace AudioLogger.Application
 
             InitializeComponent();
 
-            var waveInDevices = WaveIn.DeviceCount;
-            for (var waveInDevice = 0; waveInDevice < waveInDevices; waveInDevice++)
-            {
-                var deviceInfo = WaveIn.GetCapabilities(waveInDevice);
-                var item = new ComboboxItem
-                {
-                    Text = deviceInfo.ProductName,
-                    Value = waveInDevice
-                };
-                cb_soundcard.Items.Add(item);
-            }
+            devices = new Dictionary<int, Device>();
+            var deviceCount = WaveIn.DeviceCount;
+            for (var deviceId = 0; deviceId < deviceCount; deviceId++)
+                devices.Add(deviceId, new Device(WaveIn.GetCapabilities(deviceId), deviceId));
+            devices.Add(deviceCount + 1, new Device {ProductName = "Windows mixed output",  DeviceId = int.MaxValue});
+            devices.ForEach(device => cb_soundcard.Items.Add(new ComboboxItem {Text = device.Value.ProductName, Value = device.Key}));
+
+            LoadConfiguration();
+        }
+
+        private void LoadConfiguration()
+        {
             cb_soundcard.SelectedItem = cb_soundcard.SelectedIndex = 0;
             tb_length.Text = _config.IniReadValue("general", "length");
             tb_keepFilesForDays.Text = _config.IniReadValue("general", "retention_rate");
@@ -87,8 +88,8 @@ namespace AudioLogger.Application
         public void set_device(object sender, EventArgs e)
         {
             var selectedDevice = (ComboboxItem) cb_soundcard.SelectedItem;
-            _deviceId = Convert.ToInt32(selectedDevice.Value);
-            DeviceName = selectedDevice.Text;
+            if (!devices.TryGetValue(selectedDevice.Value, out _activeDevice))
+                throw new Exception("An error occured during device selection"); 
         }
 
         public void btn_start_Click(object sender, EventArgs e)
@@ -219,7 +220,7 @@ namespace AudioLogger.Application
 
         private void inzinierius_DoWork(object sender, DoWorkEventArgs e)
         {
-            _recorderService.Setup(_deviceId);
+            _recorderService.Setup(_activeDevice);
             _recorderService.StartRecording();
             do
             {
@@ -368,7 +369,7 @@ namespace AudioLogger.Application
 
             MMDeviceEnumerator de = new MMDeviceEnumerator();
 
-            var device = (MMDevice) de.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
+            var device = de.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
             //<-- veikia Default input device
 
             //var device = (MMDevice)de.GetDevice(DeviceName); // <-- niaveikia, crashina, jei nori pasirinkt device is comboBoxo
