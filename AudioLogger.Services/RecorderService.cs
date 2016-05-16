@@ -4,39 +4,6 @@ using NAudio.Wave;
 
 namespace AudioLogger.Services
 {
-    public class Device
-    {
-        public Device(WaveInCapabilities capabilities, int deviceId, string productName = null)
-        {
-            Capabilities = capabilities;
-            DeviceId = deviceId;
-            ProductName = productName ?? Capabilities.ProductName;
-        }
-
-        public Device() {}
-
-        public WaveInCapabilities Capabilities { get; }
-        public string ProductName { get; set; }
-        public int DeviceId { get; set; }
-    }
-
-    public class WaveInDeviceFactory
-    {
-        public static IWaveIn GetWaveInDevice(Device device)
-        {
-            switch (device.DeviceId)
-            {
-                case int.MaxValue:
-                    return new  WasapiLoopbackCapture();
-                default:
-                    return new WaveInEvent
-                    {
-                        DeviceNumber = (int)device.DeviceId,
-                        WaveFormat = new WaveFormat(48000, 16, 2)
-                    };
-            }
-        }
-    }
     public class RecorderService : IRecorderService
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (RecorderService));
