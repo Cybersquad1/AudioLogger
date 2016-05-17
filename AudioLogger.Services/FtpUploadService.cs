@@ -27,7 +27,7 @@ namespace AudioLogger.Services
             _format = parameters.FileNameFromDateFormat;
         }
 
-        public bool TryUploadFile(string source)
+        public bool TryUploadFile(AudioLog audioLog)
         {
             _client = new WebClient
             {
@@ -36,12 +36,9 @@ namespace AudioLogger.Services
             };
             try
             {
-                var address = string.Format("ftp://{0}/{1}/{2}",
-                    _host,
-                    _targetDirectory,
-                    source.Split('\\').Last());
+                var address = $"ftp://{_host}/{_targetDirectory}/{Path.GetFileName(audioLog.GetMp3())}";
                 _client.UploadFile(address,
-                    "STOR", source);
+                    "STOR", audioLog.GetMp3());
             }
             catch (Exception exception)
             {
@@ -51,9 +48,9 @@ namespace AudioLogger.Services
             return true;
         }
 
-        public IEnumerable<string> GetFilesOlderThan(DateTime date)
+        public IEnumerable<AudioLog> GetFilesOlderThan(DateTime date)
         {
-            var webRequest = WebRequest.Create(string.Format("ftp://{0}/{1}", _host, _targetDirectory)) as FtpWebRequest;
+            var webRequest = WebRequest.Create($"ftp://{_host}/{_targetDirectory}") as FtpWebRequest;
             if (webRequest == null) throw new WebException("Failed to create a web request");
             webRequest.Method = WebRequestMethods.Ftp.ListDirectory;
             webRequest.Credentials = new NetworkCredential(_username, _password);
@@ -76,12 +73,12 @@ namespace AudioLogger.Services
                                 DateTime fileTime;
                                 if (!DateTime.TryParseExact(file, _format, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out fileTime))
                                 {
-                                    Logger.Warn(string.Format("Malformed file name {0}", file));
+                                    Logger.Warn($"Malformed file name {file}");
                                     continue;
                                 }
                                 if (fileTime.CompareTo(date) < 0)
                                 {
-                                    yield return line;
+                                    yield return AudioLog.FromPath(line);
                                 }
                             }
                         }
@@ -96,8 +93,7 @@ namespace AudioLogger.Services
         {
             try
             {
-                var address = string.Format("ftp://{0}/{1}",
-                    _host, _targetDirectory);
+                var address = $"ftp://{_host}/{_targetDirectory}";
                 var request = WebRequest.Create(address) as FtpWebRequest;
                 if (request == null) throw new WebException("Failed to create a web request");
 
@@ -117,14 +113,14 @@ namespace AudioLogger.Services
             }
         }
 
-        public bool RemoveFiles(IEnumerable<string> files)
+        public bool TryRemoveFiles(IEnumerable<AudioLog> files)
         {
             try
             {
                 foreach (var file in files)
                 {
 
-                    var deleteRequest = WebRequest.Create(string.Format("ftp://{0}/{1}", _host, file)) as FtpWebRequest;
+                    var deleteRequest = WebRequest.Create($"ftp://{_host}/{file.GetMp3()}") as FtpWebRequest;
                     if (deleteRequest == null) throw new WebException("Failed to create a web request");
                     deleteRequest.Method = WebRequestMethods.Ftp.DeleteFile;
                     deleteRequest.Credentials = new NetworkCredential(_username, _password);

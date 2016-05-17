@@ -20,13 +20,13 @@ namespace AudioLogger.Services
             _waveSource.RecordingStopped += waveSource_RecordingStopped;
         }
 
-        public void WaveFile(string filename)
+        public void WaveFile(AudioLog audioLog)
         {
             if (_waveSource == null) throw new ArgumentException("wave source not set up");
             lock (_lock)
             {
                 _waveFile?.Dispose();
-                _waveFile = new WaveFileWriter(filename, _waveSource.WaveFormat);
+                _waveFile = new WaveFileWriter(audioLog.GetWav(), _waveSource.WaveFormat);
             }
         }
 

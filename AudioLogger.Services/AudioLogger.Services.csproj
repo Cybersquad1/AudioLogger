@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConverterService.cs" />
+    <Compile Include="Device.cs" />
     <Compile Include="EncryptionService.cs" />
     <Compile Include="FtpUploadService.cs" />
     <Compile Include="IConverterService.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Parameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecorderService.cs" />
+    <Compile Include="WaveInDeviceFactory.cs" />
     <Compile Include="WindowsDirectoryUploadService.cs" />
   </ItemGroup>
   <ItemGroup>

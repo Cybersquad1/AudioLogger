@@ -5,9 +5,9 @@ namespace AudioLogger.Services
 {
     public interface IUploadService
     {
-        bool TryUploadFile(string source);
+        bool TryUploadFile(AudioLog audioLog);
         bool TestConnection();
-        IEnumerable<string> GetFilesOlderThan(DateTime date);
-        bool RemoveFiles(IEnumerable<string> files);
+        IEnumerable<AudioLog> GetFilesOlderThan(DateTime date);
+        bool TryRemoveFiles(IEnumerable<AudioLog> files);
     }
 }

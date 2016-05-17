@@ -224,10 +224,9 @@ namespace AudioLogger.Application
             _recorderService.StartRecording();
             do
             {
-                var fullBasePathNoExt = GenerateFilenameFromCurrentDate();
-                var fullpathWav = fullBasePathNoExt + ".wav";
-                var fullpathMp3 = fullBasePathNoExt + ".mp3";
-                _recorderService.WaveFile(fullpathWav);
+                var audioLog = new AudioLog(AppParameters.TemporaryFolder, DateTime.Now, AudioLogFormat.Wav);
+
+                _recorderService.WaveFile(audioLog);
                 var now = DateTime.Now;
                 var fileLenghtrequested = Convert.ToInt32(_filelenght);
                 var endofSpan = roundup(now, TimeSpan.FromMinutes(fileLenghtrequested));
@@ -247,39 +246,25 @@ namespace AudioLogger.Application
                     }
                 }
 
-                var asyncConvert = new Thread(() => AsyncConvertAndUpload(fullpathWav, fullpathMp3));
+                var asyncConvert = new Thread(() => AsyncConvertAndUpload(audioLog));
                 asyncConvert.Start();
             } while (!inzinierius.CancellationPending);
             _recorderService.StopRecording();
             e.Cancel = true;
         }
 
-        private string GenerateFilenameFromCurrentDate()
-        {
-            return String.Format("{0}\\{1}", AppParameters.TemporaryFolder,
-                DateTime.Now.ToString(Configuration.Default.AudioFilenameFormat));
-        }
-
-        private void AsyncConvertAndUpload(string fullpathWav, string fullpathMp3)
+        private void AsyncConvertAndUpload(AudioLog audioLog)
         {
             Thread.Sleep(1000);
+
+            _converterService.AsyncConvert(audioLog.GetWav(), audioLog.GetMp3());
+            _converterService.Wait();
             try
             {
-                _converterService.AsyncConvert(fullpathWav, fullpathMp3);
-                _converterService.Wait();
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-            }
+                UploadConvertedFile(audioLog);
 
-            UploadConvertedFile(fullpathMp3);
-
-            try
-            {
-                File.Delete(fullpathWav);
-                File.Delete(fullpathMp3);
+                File.Delete(audioLog.GetWav());
+                File.Delete(audioLog.GetMp3());
             }
             catch (Exception ex)
             {
@@ -287,14 +272,21 @@ namespace AudioLogger.Application
             }
         }
 
-        private void UploadConvertedFile(string fullpathMp3)
+        private void UploadConvertedFile(AudioLog audioLog)
         {
-            IUploadService uploadService = null;
-            if (AppParameters.UploadType.Equals("FTP"))
-                uploadService = new FtpUploadService(AppParameters);
-
-            if (AppParameters.UploadType.Equals("Windows directory"))
-                uploadService = new WindowsDirectoryUploadService(AppParameters);
+            IUploadService uploadService;
+            switch (AppParameters.UploadType)
+            {
+                case "FTP":
+                    uploadService = new FtpUploadService(AppParameters);
+                    break;
+                case "Windows directory":
+                    uploadService = new WindowsDirectoryUploadService(AppParameters);
+                    break;
+                default:
+                    uploadService = null;
+                    break;
+            }
 
             if (uploadService == null)
                 throw new ArgumentException("Failed to construct upload service, the type selection must be broken.");
@@ -303,7 +295,7 @@ namespace AudioLogger.Application
             var retryCount = 3;
             for (var i = 0; i < retryCount; i++)
             {
-                if (uploadService.TryUploadFile(fullpathMp3))
+                if (uploadService.TryUploadFile(audioLog))
                 {
                     break;
                 }
@@ -319,12 +311,11 @@ namespace AudioLogger.Application
             {
                 var files =
                     uploadService.GetFilesOlderThan(GetEndOfLifeDate()).ToArray();
-                if (!uploadService.RemoveFiles(files))
+                if (!uploadService.TryRemoveFiles(files))
                     CopyToBackupDir(files);
             }
             catch (Exception ex)
             {
-                Logger.Warn("Could not remove old files");
                 Logger.Warn(ex.Message);
             }
         }
@@ -334,12 +325,12 @@ namespace AudioLogger.Application
             return DateTime.Now.Subtract(TimeSpan.FromDays(AppParameters.RetentionRateInDays));
         }
 
-        private void CopyToBackupDir(IEnumerable<string> files)
+        private void CopyToBackupDir(IEnumerable<AudioLog> files)
         {
             if (!Directory.Exists(Configuration.Default.BackupDir.GetProgramDataSubFolder()))
                 Directory.CreateDirectory(Configuration.Default.BackupDir.GetProgramDataSubFolder());
             foreach (var file in files)
-                File.Copy(file, Configuration.Default.BackupDir.GetProgramDataSubFolder());
+                File.Copy(file.GetMp3(), Configuration.Default.BackupDir.GetProgramDataSubFolder());
         }
 
         private void inzinierius_RunWorkCompleted(object sender, RunWorkerCompletedEventArgs e)

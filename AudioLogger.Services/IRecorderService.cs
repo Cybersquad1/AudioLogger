@@ -3,7 +3,7 @@
     public interface IRecorderService
     {
         void Setup(Device device);
-        void WaveFile(string filename);
+        void WaveFile(AudioLog audioLog);
         void StartRecording();
         void StopRecording();
     }
