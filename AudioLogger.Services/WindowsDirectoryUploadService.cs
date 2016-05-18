@@ -4,66 +4,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using log4net;
+using Microsoft.Practices.ObjectBuilder2;
 
 namespace AudioLogger.Services
 {
-    public enum AudioLogFormat
-    {
-        Mp3,
-        Wav
-    }
-
-    public class AudioLog
-    {
-        private readonly string _prefix;
-        private DateTime _timeOfLog;
-
-        public static string DateFormat { get; set; } = "yyyyMMdd-HHmmss";
-
-        public AudioLogFormat Format { get; }
-
-        public AudioLog(string prefix, DateTime timeOfLog, AudioLogFormat format)
-        {
-            _prefix = prefix;
-            _timeOfLog = timeOfLog;
-            Format = format;
-        }
-
-        private string GetFilename()
-        {
-            return $"{_prefix}\\{_timeOfLog.ToString(DateFormat)}";
-        }
-
-        public string GetWav()
-        {
-            return GetFilename() + ".wav";
-        }
-
-        public string GetMp3()
-        {
-            return GetFilename() + ".mp3";
-        }
-
-        public static AudioLog FromPath(string fullName)
-        {
-            var time = DateTime.ParseExact(fullName, DateFormat, CultureInfo.InvariantCulture);
-            var path = Path.GetPathRoot(fullName);
-            var extension = Path.GetExtension(fullName);
-            return new AudioLog(path, time, GetFormat(extension));
-        }
-
-        private static AudioLogFormat GetFormat(string extension)
-        {
-            switch (extension)
-            {
-                case "mp3":
-                    return AudioLogFormat.Mp3;
-                default:
-                    return AudioLogFormat.Wav;
-            }
-        }
-    }
-
     public class WindowsDirectoryUploadService : IUploadService
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (WindowsDirectoryUploadService));
@@ -80,7 +24,7 @@ namespace AudioLogger.Services
         {
             try
             {
-                var fullpath = $"{_destinationDirectory}\\{Path.GetFileName(audioLog.GetMp3())}";
+                var fullpath = $"{GetFolder(audioLog.TimeOfLog)}\\{Path.GetFileName(audioLog.GetMp3())}";
                 File.Copy(audioLog.GetMp3(), fullpath);
             }
             catch (Exception e)
@@ -89,6 +33,13 @@ namespace AudioLogger.Services
                 return false;
             }
             return true;
+        }
+
+        private string GetFolder(DateTime time)
+        {
+            var dir = $"{_destinationDirectory}\\{time.ToString("yyyy-MM-dd")}";
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            return dir;
         }
 
         public bool TestConnection()
@@ -100,10 +51,9 @@ namespace AudioLogger.Services
         {
             try
             {
-                foreach (var file in files)
-                {
-                    File.Delete(file.GetMp3());
-                }
+                var dayGroup = files.GroupBy(log => log.TimeOfLog.ToString("yyyy-MM-dd"));
+                var folders = dayGroup.Select(logs => GetFolder(logs.First().TimeOfLog));
+                folders.ForEach(folder => Directory.Delete(folder, true));
             }
             catch (Exception ex)
             {
@@ -124,12 +74,12 @@ namespace AudioLogger.Services
                 DateTime fileTime;
                 if (!DateTime.TryParseExact(file.Name.Split(Char.Parse(".")).First(), _format, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out fileTime))
                 {
-                    Logger.Warn($"Malformed file name {file.FullName}");
+                    Logger.Warn($"Malformed file name {file.Name}");
                     continue;
                 }
                 if (fileTime.CompareTo(date) < 0)
                 {
-                    yield return AudioLog.FromPath(file.FullName);
+                    yield return AudioLog.FromPath(file.Name);
                 }
             }
         }

@@ -60,6 +60,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioLog.cs" />
+    <Compile Include="AudioLogFormat.cs" />
     <Compile Include="ConverterService.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="EncryptionService.cs" />
