@@ -1,4 +1,8 @@
 ﻿
+using System.Collections.Generic;
+using System.IO;
+using AudioLogger.Services;
+
 namespace AudioLogger.Application
 {
     partial class ApplicationForm

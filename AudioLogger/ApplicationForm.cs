@@ -17,16 +17,17 @@ namespace AudioLogger.Application
     public partial class ApplicationForm : Form
     {
         private static readonly ILog Logger = LogManager.GetLogger(typeof (ApplicationForm));
+        private static readonly Configuration ApplicationConfiguration = Configuration.Default;
         private readonly IniFile _config = new IniFile(
             Extentions.GetProgramFolder() + 
-            Configuration.Default.IniFilename);
+            ApplicationConfiguration.IniFilename);
 
         private static Parameters AppParameters { get; set; }
 
         private string _filelenght;
         private int _progress;
         private int _progressTotal;
-        private Dictionary<int, Device> devices;
+        private readonly Dictionary<int, Device> _devices;
         private Device _activeDevice;
 
         private readonly IConverterService _converterService;
@@ -45,16 +46,16 @@ namespace AudioLogger.Application
             _converterService = converterService;
             _encryptionService = encryptionService;
 
-            AppParameters = new Parameters {TemporaryFolder = Configuration.Default.TemporaryFolder.GetProgramDataSubFolder()};
+            AppParameters = new Parameters {TemporaryFolder = ApplicationConfiguration.TemporaryFolder.GetProgramDataSubFolder()};
 
             InitializeComponent();
 
-            devices = new Dictionary<int, Device>();
+            _devices = new Dictionary<int, Device>();
             var deviceCount = WaveIn.DeviceCount;
             for (var deviceId = 0; deviceId < deviceCount; deviceId++)
-                devices.Add(deviceId, new Device(WaveIn.GetCapabilities(deviceId), deviceId));
-            devices.Add(deviceCount + 1, new Device {ProductName = "Windows mixed output",  DeviceId = int.MaxValue});
-            devices.ForEach(device => cb_soundcard.Items.Add(new ComboboxItem {Text = device.Value.ProductName, Value = device.Key}));
+                _devices.Add(deviceId, new Device(WaveIn.GetCapabilities(deviceId), deviceId));
+            _devices.Add(deviceCount + 1, new Device {ProductName = "Windows mixed output",  DeviceId = int.MaxValue});
+            _devices.ForEach(device => cb_soundcard.Items.Add(new ComboboxItem {Text = device.Value.ProductName, Value = device.Key}));
 
             LoadConfiguration();
         }
@@ -88,7 +89,7 @@ namespace AudioLogger.Application
         public void set_device(object sender, EventArgs e)
         {
             var selectedDevice = (ComboboxItem) cb_soundcard.SelectedItem;
-            if (!devices.TryGetValue(selectedDevice.Value, out _activeDevice))
+            if (!_devices.TryGetValue(selectedDevice.Value, out _activeDevice))
                 throw new Exception("An error occured during device selection"); 
         }
 
@@ -112,26 +113,13 @@ namespace AudioLogger.Application
 
         private bool CheckAndWarnForFileDeletion()
         {
-            IUploadService service = null;
-            if (AppParameters.UploadType.Equals("FTP"))
-                service = new FtpUploadService(AppParameters);
-            else if (AppParameters.UploadType.Equals("Windows directory"))
-                service = new WindowsDirectoryUploadService(AppParameters);
-
-            if (service == null)
-            {
-                MessageBox.Show("Something went wrong with upload services, try reconfiguring settings.");
-                return true;
-            }
-
+            IUploadService service = UploadServiceFactory.CreateUploadService(AppParameters);
             var deletableFiles = service.GetFilesOlderThan(GetEndOfLifeDate()).ToArray();
-            if (deletableFiles.Count() > Configuration.Default.WarningTrigger)
+            if (deletableFiles.Count() > ApplicationConfiguration.WarningTrigger)
             {
                 var result =
                     MessageBox.Show(
-                        string.Format(
-                            "{0} files of recordings will be deleted when this cycle is finished. Are you sure you want to do this?",
-                            deletableFiles.Count()),
+                        $"{deletableFiles.Length} files of recordings will be deleted when this cycle is finished. Are you sure you want to do this?",
                         "Warning", MessageBoxButtons.YesNo);
 
                 if (CancelIfUnsatisfied(
@@ -154,7 +142,7 @@ namespace AudioLogger.Application
             Invoke(new MethodInvoker(delegate { AppParameters.FtpPassword = tb_password.Text; }));
             Invoke(
                 new MethodInvoker(
-                    delegate { AppParameters.FileNameFromDateFormat = Configuration.Default.AudioFilenameFormat; }));
+                    delegate { AppParameters.FileNameFromDateFormat = ApplicationConfiguration.AudioFilenameFormat; }));
             Invoke(new MethodInvoker(delegate { AppParameters.FtpTargetDirectory = tb_directory.Text; }));
             Invoke(new MethodInvoker(delegate
             {
@@ -208,7 +196,7 @@ namespace AudioLogger.Application
             if (condition)
             {
                 MessageBox.Show(message);
-                this.btn_stop_Click(this, null);
+                btn_stop_Click(this, null);
             }
             return condition;
         }
@@ -274,22 +262,7 @@ namespace AudioLogger.Application
 
         private void UploadConvertedFile(AudioLog audioLog)
         {
-            IUploadService uploadService;
-            switch (AppParameters.UploadType)
-            {
-                case "FTP":
-                    uploadService = new FtpUploadService(AppParameters);
-                    break;
-                case "Windows directory":
-                    uploadService = new WindowsDirectoryUploadService(AppParameters);
-                    break;
-                default:
-                    uploadService = null;
-                    break;
-            }
-
-            if (uploadService == null)
-                throw new ArgumentException("Failed to construct upload service, the type selection must be broken.");
+            var uploadService = UploadServiceFactory.CreateUploadService(AppParameters);
 
             // Retry cycle
             var retryCount = 3;
@@ -299,7 +272,7 @@ namespace AudioLogger.Application
                 {
                     break;
                 }
-                Logger.Error(string.Format("Upload attempt {0} failed", i + 1));
+                Logger.Error($"Upload attempt {i + 1} failed");
                 if (i >= retryCount)
                 {
                     Logger.Error("Failed to upload file");
@@ -307,30 +280,12 @@ namespace AudioLogger.Application
                 Thread.Sleep(2000);
             }
 
-            try
-            {
-                var files =
-                    uploadService.GetFilesOlderThan(GetEndOfLifeDate()).ToArray();
-                if (!uploadService.TryRemoveFiles(files))
-                    CopyToBackupDir(files);
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn(ex.Message);
-            }
+            FileManager.TryDeleteOldFiles(uploadService, GetEndOfLifeDate());
         }
 
         private DateTime GetEndOfLifeDate()
         {
             return DateTime.Now.Subtract(TimeSpan.FromDays(AppParameters.RetentionRateInDays));
-        }
-
-        private void CopyToBackupDir(IEnumerable<AudioLog> files)
-        {
-            if (!Directory.Exists(Configuration.Default.BackupDir.GetProgramDataSubFolder()))
-                Directory.CreateDirectory(Configuration.Default.BackupDir.GetProgramDataSubFolder());
-            foreach (var file in files)
-                File.Copy(file.GetMp3(), Configuration.Default.BackupDir.GetProgramDataSubFolder());
         }
 
         private void inzinierius_RunWorkCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -399,12 +354,12 @@ namespace AudioLogger.Application
 
         private void bt_minimyze_Click(object sender, EventArgs e)
         {
-            this.Hide();
+            Hide();
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            this.Show();
+            Show();
         }
     }
 }
