@@ -34,16 +34,15 @@ namespace AudioLogger.Services
             try
             {
                 Thread.Sleep(1000);
-                MemoryStream wavefilesource = new MemoryStream(File.ReadAllBytes(_fullpathwav));
-                wavefilesource.Seek(0, SeekOrigin.Begin);
-                using (var rdr = new WaveFileReader(wavefilesource))
+                using (var waveFileStream = File.Open(_fullpathwav, FileMode.Open))
+                using (var bufferedWaveFileStream = new BufferedStream(waveFileStream))
+                using (var rdr = new WaveFileReader(bufferedWaveFileStream))
                 {
                     using (var wtr = new LameMP3FileWriter(_fullpathmp3, rdr.WaveFormat, LAMEPreset.VBR_90))
                     {
                         rdr.CopyTo(wtr);
                     }
                 }
-                wavefilesource.Close();
             }
             catch (Exception e)
             {
