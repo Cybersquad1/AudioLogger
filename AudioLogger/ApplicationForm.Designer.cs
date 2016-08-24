@@ -454,9 +454,9 @@ namespace AudioLogger.Application
             this.txt_version.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.txt_version.Location = new System.Drawing.Point(450, 88);
             this.txt_version.Name = "txt_version";
-            this.txt_version.Size = new System.Drawing.Size(91, 13);
+            this.txt_version.Size = new System.Drawing.Size(97, 13);
             this.txt_version.TabIndex = 33;
-            this.txt_version.Text = "AudioLogger v1.2";
+            this.txt_version.Text = "AudioLogger v1.6a";
             // 
             // ApplicationForm
             // 
