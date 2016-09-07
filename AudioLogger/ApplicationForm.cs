@@ -27,10 +27,10 @@ namespace AudioLogger.Application
         private string _filelenght;
         private int _progress;
         private int _progressTotal;
-        private readonly Dictionary<int, Device> _devices;
+        private readonly Dictionary<string, Device> _devices;
         private Device _activeDevice;
 
-        private readonly IConverterService _converterService;
+		private readonly IConverterService _converterService;
         private readonly IRecorderService _recorderService;
         private readonly IEncryptionService _encryptionService;
 
@@ -50,12 +50,19 @@ namespace AudioLogger.Application
 
             InitializeComponent();
 
-            _devices = new Dictionary<int, Device>();
-            var deviceCount = WaveIn.DeviceCount;
-            for (var deviceId = 0; deviceId < deviceCount; deviceId++)
-                _devices.Add(deviceId, new Device(WaveIn.GetCapabilities(deviceId), deviceId));
-            _devices.Add(deviceCount + 1, new Device {ProductName = "Windows mixed output",  DeviceId = int.MaxValue});
-            _devices.ForEach(device => cb_soundcard.Items.Add(new ComboboxItem {Text = device.Value.ProductName, Value = device.Key}));
+			_devices = new Dictionary<string, Device>();
+
+			MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
+			foreach (MMDevice device in enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active))
+			{
+				_devices.Add(device.ID, new Device(device.ID, device.FriendlyName, false));
+			}
+			
+			MMDevice loopbackDevice = WasapiLoopbackCapture.GetDefaultLoopbackCaptureDevice();
+
+			_devices.Add(loopbackDevice.ID, new Device(loopbackDevice.ID, string.Format("Windows mixed output - {0}", loopbackDevice.FriendlyName), true));
+
+			_devices.ForEach(device => cb_soundcard.Items.Add(new ComboboxItem {Text = device.Value.ProductName, Value = device.Key}));
 
             LoadConfiguration();
         }
@@ -95,6 +102,9 @@ namespace AudioLogger.Application
 
         public void btn_start_Click(object sender, EventArgs e)
         {
+            InitializeProperties();
+            if (!ValidateFields()) return;
+
             cb_soundcard.Enabled = false;
             btn_stop.Enabled = true;
             btn_start.Enabled = false;
@@ -102,9 +112,6 @@ namespace AudioLogger.Application
             tb_keepFilesForDays.Enabled = false;
             cb_uploadType.Enabled = false;
             tb_fileUploadDir.Enabled = false;
-
-            InitializeProperties();
-            if (!ValidateFields()) return;
 
             if (CheckAndWarnForFileDeletion()) return;
 
@@ -161,7 +168,7 @@ namespace AudioLogger.Application
             if (CancelIfUnsatisfied(AppParameters.RetentionRateInDays < 0,
                 "Please enter a valid number to keep for field")) return false;
 
-            if (CancelIfUnsatisfied(AppParameters.RecordingDurationInMinutes == 0,
+            if (CancelIfUnsatisfied(AppParameters.RecordingDurationInMinutes <= 0,
                 "Please enter a valid number to time span field")) return false;
 
             if (AppParameters.UploadType.Equals("FTP"))
@@ -315,7 +322,9 @@ namespace AudioLogger.Application
 
             MMDeviceEnumerator de = new MMDeviceEnumerator();
 
-            var device = de.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
+			MMDevice device = de.GetDevice(_activeDevice.DeviceId);
+
+            //var device = de.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Multimedia);
             //<-- veikia Default input device
 
             //var device = (MMDevice)de.GetDevice(DeviceName); // <-- niaveikia, crashina, jei nori pasirinkt device is comboBoxo
@@ -330,7 +339,7 @@ namespace AudioLogger.Application
         public class ComboboxItem
         {
             public string Text { get; set; }
-            public int Value { get; set; }
+            public string Value { get; set; }
 
             public override string ToString()
             {

@@ -1,20 +1,21 @@
+using NAudio.CoreAudioApi;
 using NAudio.Wave;
 
 namespace AudioLogger.Services
 {
     public class Device
     {
-        public Device(WaveInCapabilities capabilities, int deviceId, string productName = null)
+        public Device(string deviceId, string productName, bool loopback)
         {
-            Capabilities = capabilities;
             DeviceId = deviceId;
-            ProductName = productName ?? Capabilities.ProductName;
-        }
+            ProductName = productName;
+			isLoopback = loopback;
+		}
 
         public Device() {}
 
-        public WaveInCapabilities Capabilities { get; }
         public string ProductName { get; set; }
-        public int DeviceId { get; set; }
+        public string DeviceId { get; set; }
+		public bool isLoopback { get; }
     }
 }
